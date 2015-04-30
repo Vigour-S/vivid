@@ -1,0 +1,12 @@
+language: java
+
+jdk:
+  - oraclejdk8
+  - oraclejdk7
+  - openjdk7
+
+notifications:
+  slack:
+    rooms:
+      - algalon:0VFlFf3fc108NULhyzjAp4pg#vivid
+  email: false
