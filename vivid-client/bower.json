@@ -6,13 +6,11 @@
     "meld": "~1",
     "most": "~0.2",
     "curl": "~0.8",
-    "poly": "~0",
     "jquery": "1.8.3",
     "semantic": "~1.12",
     "gmaps": "0.4.14",
     "zeroclipboard": "1.1.7",
-    "google-code-prettify": "~1.0",
-    "jquery-timeago": "1.4.1"
+    "google-code-prettify": "~1.0"
   },
   "overrides": {
     "jquery": {
@@ -26,15 +24,6 @@
     },
     "most": {
       "ignore": ["test/**"]
-    },
-    "bootstrap": {
-      "ignore": [
-        "js/**", "img/**", "less/**", "docs/build/**",
-        "docs/examples/**", "docs/templates/**", "docs/*.html"
-      ]
-    },
-    "bootstrap-datetimepicker": {
-      "ignore": ["build/**", "test/**"]
     },
     "font-awesome": {
       "ignore": ["css/**", "less/**", "scss/**", "src/**"]

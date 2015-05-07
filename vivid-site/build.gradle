@@ -1,31 +1,30 @@
 springBoot {
-    mainClass = 'vivid.SiteMain'
-    requiresUnpack = ['org.jruby:jruby-complete']
+    mainClass = "vivid.SiteMain"
 }
 
 applicationDefaultJvmArgs = [
         // Set vivid_HOME env variable to the root of vivid project. This allows to register an additional
         // resource handler location and serve static resources directly from the vivid-client module during dev.
         // See vivid.ClientResourcesConfig
-        '-Dvivid_HOME=${rootProject.rootDir}'
+        "-Dvivid_HOME=${rootProject.rootDir}"
 ]
 
 dependencies {
-    compile project(':vivid-common')
-    compile project(':vivid-client')
+    compile project(":vivid-common")
+    compile project(":vivid-client")
 
-    compile 'org.springframework.boot:spring-boot-starter-web'
-    compile 'org.springframework.boot:spring-boot-starter-actuator'
-    compile 'org.springframework.boot:spring-boot-starter-redis'
-    compile 'org.springframework.boot:spring-boot-starter-security'
-    compile 'org.springframework.security:spring-security-acl'
+    compile "org.springframework.boot:spring-boot-starter-web:1.2.3.RELEASE"
+    compile "org.springframework.boot:spring-boot-starter-actuator:1.2.3.RELEASE"
+    compile "org.springframework.boot:spring-boot-starter-redis:1.2.3.RELEASE"
+    compile "org.springframework.boot:spring-boot-starter-security:1.2.3.RELEASE"
+    compile "org.springframework.security:spring-security-acl"
 
     // Jade is used as the template engine for serving HTML
-    compile 'com.domingosuarez.boot:spring-boot-starter-jade4j:0.2'
+    compile "com.domingosuarez.boot:spring-boot-starter-jade4j:0.2"
 
     // for use in mocking http interactions
-    testCompile 'org.springframework:spring-test'
+    testCompile "org.springframework:spring-test"
 
     // pick up common test utility classes
-    testCompile project(':vivid-common').sourceSets.testUtil.output
+    testCompile project(":vivid-common").sourceSets.testUtil.output
 }

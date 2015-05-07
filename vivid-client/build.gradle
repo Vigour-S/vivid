@@ -1,12 +1,12 @@
 import org.gradle.api.tasks.Exec
 import org.apache.tools.ant.taskdefs.condition.Os
 
-apply plugin: 'java'
+apply plugin: "java"
 
 jar {
-    from 'dist'
+    from "dist"
     eachFile { details ->
-        details.path = details.path.startsWith('META-INF') ?: 'static/'+details.path
+        details.path = details.path.startsWith("META-INF") ?: "static/"+details.path
     }
     // Jar contains duplicate empty folders, see Gradle issue:
     // http://issues.gradle.org/browse/GRADLE-1830
@@ -20,25 +20,25 @@ task npmInstall(type:Exec) {
     logging.captureStandardOutput LogLevel.INFO
     // but we do always want to see downloads in the log
     logging.captureStandardError LogLevel.LIFECYCLE
-    inputs.files 'package.json', 'bower.json'
-    outputs.dir 'node_modules'
+    inputs.files "package.json", "bower.json"
+    outputs.dir "node_modules"
     if(Os.isFamily(Os.FAMILY_WINDOWS)) {
-        commandLine 'cmd', '/c', 'npm', 'install'
+        commandLine "cmd", "/c", "npm", "install"
     } else {
-        commandLine 'npm', 'install'
+        commandLine "npm", "install"
     }
 }
 
 task npmBuild(dependsOn: npmInstall, type:Exec) {
     logging.captureStandardOutput LogLevel.INFO
     logging.captureStandardError LogLevel.INFO
-    inputs.dir 'src'
-    inputs.file 'gulpfile.js'
-    outputs.dir 'dist'
+    inputs.dir "src"
+    inputs.file "gulpfile.js"
+    outputs.dir "dist"
     if(Os.isFamily(Os.FAMILY_WINDOWS)) {
-        commandLine 'cmd', '/c', 'npm', 'run', 'build'
+        commandLine "cmd", "/c", "npm", "run", "build"
     } else {
-        commandLine 'npm', 'run', 'build'
+        commandLine "npm", "run", "build"
     }
 }
 

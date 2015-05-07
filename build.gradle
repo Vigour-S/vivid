@@ -1,4 +1,4 @@
-def vJavaLang = '1.8'
+def javaLanguageVersion = '1.8'
 def javaProjects = [ project(':vivid-site'), project(':vivid-common') ]
 def bootProjects = javaProjects - project(':vivid-common')
 def gradleDir = "${rootProject.rootDir}/gradle"
@@ -16,20 +16,16 @@ configure(allprojects) {
     apply plugin: 'idea'
 }
 
-configure(rootProject) {
-    apply from: 'gradle/gitMetadata.gradle'
-}
-
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.3'
+    gradleVersion = '2.4'
 }
 
 
 configure(javaProjects) {
     apply plugin: 'java'
 
-    targetCompatibility = vJavaLang
-    sourceCompatibility = vJavaLang
+    targetCompatibility = javaLanguageVersion
+    sourceCompatibility = javaLanguageVersion
 
     repositories {
         jcenter()
@@ -53,10 +49,8 @@ configure(javaProjects) {
 
 configure(bootProjects) {
     apply plugin: 'spring-boot'
-    apply from: "$gradleDir/writeGitPropertiesFile.gradle"
 
     springBoot.backupSource = false
-    bootRun.dependsOn writeGitPropertiesFile
 
     dependencies {
         versionManagement 'io.spring.platform:platform-versions:1.0.5.RELEASE@properties'
