@@ -30,6 +30,10 @@ dependencies {
     compile "org.springframework:spring-context"
     compile "org.springframework.security:spring-security-core"
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
+    compile "org.springframework.boot:spring-boot-starter-security"
+    compile "org.springframework.security:spring-security-web:4.0.1.RELEASE"
+    compile "org.springframework.security:spring-security-config"
+
 
     compile "org.pegdown:pegdown:1.5.0"
 
