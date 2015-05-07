@@ -1,0 +1,10 @@
+# Package Files #
+*.jar
+*.war
+*.ear
+
+*.log
+node_modules
+.idea
+*.iml
+.gradle
