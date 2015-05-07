@@ -1,2 +1,3 @@
 rootProject.name = 'vivid'
 
+include 'vivid-common', 'vivid-site', 'vivid-client'
