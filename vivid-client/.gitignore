@@ -9,3 +9,5 @@ node_modules
 *.iml
 .gradle
 src/lib
+tmp/
+vendor/

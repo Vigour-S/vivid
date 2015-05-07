@@ -1,5 +1,6 @@
 node_modules/
 .git/
 .idea/
-src/lib
+vendor/
 build/
+tmp/
