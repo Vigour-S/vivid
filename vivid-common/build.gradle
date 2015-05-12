@@ -41,6 +41,9 @@ dependencies {
     runtime "org.postgresql:postgresql:9.4-1201-jdbc41"
     compile "org.apache.tomcat:tomcat-jdbc"
 
+    // for cassandra
+    compile "org.springframework.data:spring-data-cassandra:1.2.0.RELEASE"
+
     // for use in on-the-fly database setup and migrations
     compile "org.flywaydb:flyway-core"
 
