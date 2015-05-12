@@ -39,7 +39,12 @@ public class VividApplication extends SpringApplication {
                     arrayToCommaDelimitedString(new String[] { STAGING, PRODUCTION })));
         }
 
-        if (standaloneActive) {
+        if (stagingActive || productionActive) {
+            logger.info(format("Activating '%s' profile because one of '%s' or '%s' profiles have been specified.",
+                    CLOUDFOUNDRY, STAGING, PRODUCTION));
+            environment.addActiveProfile(CLOUDFOUNDRY);
+        }
+        else if (standaloneActive) {
             logger.info("The default 'standalone' profile is active because no other profiles have been specified.");
         }
         else {
