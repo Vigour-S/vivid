@@ -31,6 +31,16 @@ public final class VividProfiles {
     public static final String PRODUCTION = "production";
 
     /**
+     * Implicitly activated when either {@link #PRODUCTION} or {@link #STAGING} profiles
+     * are active, this profile indicates that the application is running on Cloud Foundry
+     * as opposed to running {@link #STANDALONE}, and should expect to find data sources,
+     * etc as Cloud Foundry services, as opposed to finding them in-memory.
+     *
+     * @see vivid.CloudFoundryDatabaseConfig
+     */
+    public static final String CLOUDFOUNDRY = "cloudfoundry";
+
+    /**
      * The default profile for any {@link VividApplication}. Indicates that the
      * application is running locally, i.e. on a developer machine as opposed to running
      * on {@link #CLOUDFOUNDRY} and should expect to find data sources, etc in-memory as
