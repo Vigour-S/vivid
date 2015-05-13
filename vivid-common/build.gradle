@@ -34,7 +34,6 @@ dependencies {
     compile "org.springframework.security:spring-security-web:4.0.1.RELEASE"
     compile "org.springframework.security:spring-security-config"
 
-
     compile "org.pegdown:pegdown:1.5.0"
 
     // datasource and connection pool dependencies
@@ -45,7 +44,7 @@ dependencies {
     compile "org.springframework.data:spring-data-cassandra:1.2.0.RELEASE"
 
     // for use in on-the-fly database setup and migrations
-    compile "org.flywaydb:flyway-core"
+//    compile "org.flywaydb:flyway-core"
 
     // jackson, for JSON and XML serialization
     compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
@@ -71,4 +70,5 @@ dependencies {
 
     // for use of spring-test"s MatcherAssertionErrors.*
     testCompile "org.springframework:spring-test"
+
 }
