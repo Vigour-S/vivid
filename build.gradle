@@ -29,6 +29,9 @@ configure(javaProjects) {
 
     repositories {
         jcenter()
+        maven {
+            url 'http://repo.spring.io/snapshot'
+        }
     }
 
     dependencies {
