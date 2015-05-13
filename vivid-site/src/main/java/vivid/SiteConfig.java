@@ -27,7 +27,7 @@ import java.util.Properties;
 @EntityScan
 @EnableJpaRepositories
 @EnableTransactionManagement
-@Import({SecurityConfig.class})
+@Import({SecurityConfig.class, CassandraConfiguration.class})
 public class SiteConfig {
 
     @Bean
