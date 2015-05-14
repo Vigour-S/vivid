@@ -1,6 +1,7 @@
-package vivid.entity;
+package vivid.user;
 
 import org.hibernate.validator.constraints.Email;
+import vivid.support.BaseEntity;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -11,9 +12,8 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "users")
-public class User {
+public class User extends BaseEntity {
 
-    @Id
     @Column(name = "username", unique = true, nullable = false, length = 45)
     private String username;
 

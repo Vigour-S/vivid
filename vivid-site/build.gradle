@@ -17,13 +17,13 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-actuator:1.2.3.RELEASE"
     compile "org.springframework.boot:spring-boot-starter-redis:1.2.3.RELEASE"
     compile "org.springframework.boot:spring-boot-starter-security:1.2.3.RELEASE"
-    compile "org.springframework.security:spring-security-acl"
+    compile "org.springframework.security:spring-security-acl:4.0.1.RELEASE"
 
     // Jade is used as the template engine for serving HTML
     compile "com.domingosuarez.boot:spring-boot-starter-jade4j:0.2"
 
     // for use in mocking http interactions
-    testCompile "org.springframework:spring-test"
+    testCompile "org.springframework:spring-test:4.1.6.RELEASE"
 
     // pick up common test utility classes
     testCompile project(":vivid-common").sourceSets.testUtil.output

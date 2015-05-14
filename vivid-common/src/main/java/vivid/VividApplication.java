@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.core.env.ConfigurableEnvironment;
 
 import static java.lang.String.format;
@@ -14,6 +15,7 @@ import static vivid.VividProfiles.*;
  * A specialized {@link SpringApplication} that enforces {@link VividProfiles} semantics.
  * See vivid.SiteMain and vivid.IndexerMain classes for usage examples.
  */
+@EnableAutoConfiguration
 public class VividApplication extends SpringApplication {
 
     private static final Log logger = LogFactory.getLog(VividApplication.class);

@@ -1,4 +1,6 @@
-package vivid.entity;
+package vivid.user;
+
+import vivid.support.BaseEntity;
 
 import javax.persistence.*;
 
@@ -7,12 +9,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "user_roles", uniqueConstraints = @UniqueConstraint(columnNames = {"role", "username"}))
-public class UserRole {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_role_id", unique = true, nullable = false)
-    private Integer userRoleId;
+public class UserRole extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "username", nullable = false)
@@ -28,14 +25,6 @@ public class UserRole {
     public UserRole(User user, String role) {
         this.user = user;
         this.role = role;
-    }
-
-    public Integer getUserRoleId() {
-        return userRoleId;
-    }
-
-    public void setUserRoleId(Integer userRoleId) {
-        this.userRoleId = userRoleId;
     }
 
     public User getUser() {
