@@ -1,5 +1,7 @@
 package vivid.entity;
 
+import org.hibernate.validator.constraints.Email;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +20,10 @@ public class User {
     @Column(name = "password", nullable = false, length = 60)
     private String password;
 
+    @Email
+    @Column(name = "email", unique = true, nullable = false)
+    private String email;
+
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
 
@@ -28,15 +34,17 @@ public class User {
 
     }
 
-    public User(String username, String password, boolean enabled) {
+    public User(String username, String password, String email, boolean enabled) {
         this.username = username;
         this.password = password;
+        this.email = email;
         this.enabled = enabled;
     }
 
     public User(String username, String password, boolean enabled, Set<UserRole> userRoles) {
         this.username = username;
         this.password = password;
+        this.email = email;
         this.enabled = enabled;
         this.userRoles = userRoles;
     }
@@ -55,6 +63,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public boolean isEnabled() {

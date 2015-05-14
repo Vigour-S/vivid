@@ -39,7 +39,10 @@ public class MyUserDetailsService implements UserDetailsService {
     @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        vivid.entity.User user = userDao.findByUsername(username);
+        vivid.entity.User user = userDao.findByUsernameOrEmail(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found!");
+        }
         List<GrantedAuthority> authorities = buildUserAuthority(user.getUserRoles());
         return buildUserForAuthentication(user, authorities);
     }

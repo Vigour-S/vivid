@@ -28,4 +28,28 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public User findByEmail(String email) {
+        List<User> users = sessionFactory.getCurrentSession().createQuery("from User where email = ?")
+                .setParameter(0, email).list();
+        if (users.size() > 0) {
+            return users.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public User findByUsernameOrEmail(String usernameOrEmail) {
+        List<User> users = sessionFactory.getCurrentSession().createQuery("from User where username = ? or email = ?")
+                .setParameter(0, usernameOrEmail).setParameter(1, usernameOrEmail).list();
+        if (users.size() > 0) {
+            return users.get(0);
+        } else {
+            return null;
+        }
+    }
+
 }
