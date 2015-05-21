@@ -3,6 +3,7 @@ package vivid.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
+import org.springframework.data.repository.core.RepositoryInformation;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 
@@ -28,7 +29,14 @@ public class CustomRepositoryFactoryBean<R extends JpaRepository<T, I>, T, I ext
             this.em = em;
         }
 
-        protected Object getTargetRepository(RepositoryMetadata metadata) {
+        /**
+         * Create a repository instance as backing for the query proxy.
+         *
+         * @param metadata
+         * @return
+         */
+        @Override
+        protected Object getTargetRepository(RepositoryInformation metadata) {
             return new BaseRepositoryImpl<T, I>((Class<T>) metadata.getDomainType(), em);
         }
 

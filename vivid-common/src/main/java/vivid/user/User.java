@@ -41,7 +41,7 @@ public class User extends BaseEntity {
         this.enabled = enabled;
     }
 
-    public User(String username, String password, boolean enabled, Set<UserRole> userRoles) {
+    public User(String username, String password, String email, boolean enabled, Set<UserRole> userRoles) {
         this.username = username;
         this.password = password;
         this.email = email;
