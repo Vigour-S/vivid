@@ -29,7 +29,7 @@ import java.util.Properties;
 @EnableJpaRepositories(basePackages = {"vivid.repository"})
 @EnableJpaAuditing
 @EnableTransactionManagement
-@Import({SecurityConfig.class, CassandraConfig.class, MvcConfig.class})
+@Import({SecurityConfig.class, CassandraConfig.class, WebMvcConfig.class})
 public class SiteConfig {
 
     @Bean
