@@ -1,6 +1,5 @@
 package vivid.entity;
 
-import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
@@ -24,9 +23,6 @@ public class User extends BaseEntity {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "enabled", nullable = false, columnDefinition = "INT", length = 1)
-    private boolean enabled;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private Set<UserRole> userRoles = new HashSet<UserRole>(0);
 
@@ -34,18 +30,16 @@ public class User extends BaseEntity {
 
     }
 
-    public User(String username, String password, String email, boolean enabled) {
+    public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.enabled = enabled;
     }
 
-    public User(String username, String password, String email, boolean enabled, Set<UserRole> userRoles) {
+    public User(String username, String password, String email, Set<UserRole> userRoles) {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.enabled = enabled;
         this.userRoles = userRoles;
     }
 
@@ -71,14 +65,6 @@ public class User extends BaseEntity {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 
     public Set<UserRole> getUserRoles() {

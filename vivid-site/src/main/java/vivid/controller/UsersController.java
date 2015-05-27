@@ -1,9 +1,9 @@
-package vivid.users.support;
+package vivid.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import vivid.repository.UserRepository;
+import vivid.service.UserService;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -14,7 +14,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class UsersController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @RequestMapping(value = "/signup", method = GET)
     public String signUp() {
