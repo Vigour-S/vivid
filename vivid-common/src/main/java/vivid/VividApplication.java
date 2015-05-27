@@ -56,4 +56,5 @@ public class VividApplication extends SpringApplication {
                             arrayToCommaDelimitedString(environment.getDefaultProfiles()), STAGING, PRODUCTION })));
         }
     }
+
 }

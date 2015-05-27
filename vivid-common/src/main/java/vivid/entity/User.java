@@ -1,5 +1,6 @@
 package vivid.entity;
 
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
@@ -23,7 +24,7 @@ public class User extends BaseEntity {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "enabled", nullable = false)
+    @Column(name = "enabled", nullable = false, columnDefinition = "INT", length = 1)
     private boolean enabled;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")

@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
@@ -26,8 +27,9 @@ import java.util.Properties;
 @ComponentScan({"vivid.*"})
 @EntityScan
 @EnableJpaRepositories(basePackages = {"vivid.repository"})
+@EnableJpaAuditing
 @EnableTransactionManagement
-@Import({SecurityConfig.class/*, CassandraConfig.class*/})
+@Import({SecurityConfig.class, CassandraConfig.class})
 public class SiteConfig {
 
     @Bean

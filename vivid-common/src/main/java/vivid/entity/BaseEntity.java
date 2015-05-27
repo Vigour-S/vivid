@@ -13,20 +13,20 @@ import java.time.ZonedDateTime;
  * Created by wujy on 15-5-14.
  */
 @MappedSuperclass
-public class BaseEntity {
+public abstract class BaseEntity {
 
     @Id
     @GeneratedValue
     @Column(name = "id")
-    Long id;
+    private Long id;
 
     @CreatedDate
     @Column(name = "created_date")
-    ZonedDateTime createdDate;
+    private ZonedDateTime createdDate;
 
     @LastModifiedDate
     @Column(name = "modified_date")
-    ZonedDateTime modifiedDate;
+    private ZonedDateTime modifiedDate;
 
     public Long getId() {
         return id;
