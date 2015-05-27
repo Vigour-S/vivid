@@ -17,7 +17,6 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-actuator:1.2.3.RELEASE"
     compile "org.springframework.boot:spring-boot-starter-redis:1.2.3.RELEASE"
     compile "org.springframework.boot:spring-boot-starter-security:1.2.3.RELEASE"
-    compile "org.springframework.security:spring-security-acl:4.0.1.RELEASE"
 
     // Jade is used as the template engine for serving HTML
     compile "com.domingosuarez.boot:spring-boot-starter-jade4j:0.2"
