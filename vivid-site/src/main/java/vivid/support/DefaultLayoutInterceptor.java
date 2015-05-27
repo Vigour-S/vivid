@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Created by fantasticfears on 15-5-21.
  */
+@Deprecated
 public class DefaultLayoutInterceptor extends HandlerInterceptorAdapter {
     private static final String DEFAULT_LAYOUT = "layouts/default";
     private static final String DEFAULT_VIEW_ATTRIBUTE_NAME = "view";

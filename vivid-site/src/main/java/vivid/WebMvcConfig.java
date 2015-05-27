@@ -13,7 +13,7 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 
     @Override
     protected void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new DefaultLayoutInterceptor());
+        //registry.addInterceptor(new DefaultLayoutInterceptor());
     }
 
 }
