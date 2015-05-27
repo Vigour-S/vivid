@@ -14,11 +14,10 @@ import org.springframework.data.cassandra.repository.config.EnableCassandraRepos
 /**
  * Created by xiezhuohan on 15-5-12.
  */
-
 @Configuration
 @PropertySource(value = {"classpath:cassandra.properties"})
-@EnableCassandraRepositories(basePackages = {"example"})
-public class CassandraConfiguration extends AbstractCassandraConfiguration {
+@EnableCassandraRepositories(basePackages = {"vivid.repository.cassandra"})
+public class CassandraConfig extends AbstractCassandraConfiguration {
 
     @Autowired
     private Environment environment;
@@ -40,4 +39,5 @@ public class CassandraConfiguration extends AbstractCassandraConfiguration {
     public CassandraMappingContext cassandraMapping() throws ClassNotFoundException {
         return new BasicCassandraMappingContext();
     }
+
 }

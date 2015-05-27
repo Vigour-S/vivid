@@ -1,7 +1,6 @@
-package vivid.user;
+package vivid.entity;
 
 import org.hibernate.validator.constraints.Email;
-import vivid.support.BaseEntity;
 
 import javax.persistence.*;
 import java.util.HashSet;

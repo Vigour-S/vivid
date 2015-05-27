@@ -1,4 +1,4 @@
-package vivid.support;
+package vivid.entity;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;

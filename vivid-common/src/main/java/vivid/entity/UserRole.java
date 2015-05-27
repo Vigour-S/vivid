@@ -1,6 +1,4 @@
-package vivid.user;
-
-import vivid.support.BaseEntity;
+package vivid.entity;
 
 import javax.persistence.*;
 

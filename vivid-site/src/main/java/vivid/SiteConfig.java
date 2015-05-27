@@ -14,7 +14,6 @@ import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
-import vivid.repositories.CustomRepositoryFactoryBean;
 
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -26,9 +25,9 @@ import java.util.Properties;
 @Configuration
 @ComponentScan({"vivid.*"})
 @EntityScan
-@EnableJpaRepositories(basePackages = {"vivid.repositories.*"}, repositoryFactoryBeanClass = CustomRepositoryFactoryBean.class)
+@EnableJpaRepositories(basePackages = {"vivid.repository"})
 @EnableTransactionManagement
-@Import({SecurityConfig.class, CassandraConfiguration.class})
+@Import({SecurityConfig.class/*, CassandraConfig.class*/})
 public class SiteConfig {
 
     @Bean

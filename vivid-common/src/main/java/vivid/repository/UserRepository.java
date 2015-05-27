@@ -1,14 +1,14 @@
-package vivid.repositories;
+package vivid.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import vivid.repositories.BaseRepository;
-import vivid.user.User;
+import vivid.entity.User;
 
 /**
  * Created by wujy on 15-5-14.
  */
 @Repository
-public interface UserRepository extends BaseRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByUsername(String username);
 
