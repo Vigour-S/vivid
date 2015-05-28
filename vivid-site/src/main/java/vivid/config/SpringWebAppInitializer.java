@@ -23,7 +23,6 @@ public class SpringWebAppInitializer extends AbstractAnnotationConfigDispatcherS
 
     @Override
     protected String[] getServletMappings() {
-
         return new String[]{"/"};
     }
 

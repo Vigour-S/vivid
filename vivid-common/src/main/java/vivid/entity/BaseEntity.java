@@ -5,7 +5,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * Created by wujy on 15-5-14.
@@ -21,11 +21,11 @@ public abstract class BaseEntity {
 
     @CreatedDate
     @Column(name = "created_date")
-    private LocalDateTime createdDate;
+    private ZonedDateTime createdDate;
 
     @LastModifiedDate
     @Column(name = "modified_date")
-    private LocalDateTime modifiedDate;
+    private ZonedDateTime modifiedDate;
 
     public Long getId() {
         return id;
@@ -35,19 +35,19 @@ public abstract class BaseEntity {
         this.id = id;
     }
 
-    public LocalDateTime getCreatedDate() {
+    public ZonedDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(LocalDateTime createdDate) {
+    public void setCreatedDate(ZonedDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
-    public LocalDateTime getModifiedDate() {
+    public ZonedDateTime getModifiedDate() {
         return modifiedDate;
     }
 
-    public void setModifiedDate(LocalDateTime modifiedDate) {
+    public void setModifiedDate(ZonedDateTime modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
 

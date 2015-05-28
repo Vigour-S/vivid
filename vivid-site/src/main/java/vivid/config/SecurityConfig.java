@@ -10,7 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import vivid.service.CustomUserDetailsService;
+import vivid.support.CustomUserDetailsService;
 
 /**
  * Created by wujy on 15-5-12.
@@ -37,21 +37,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-            .authorizeRequests()
+                .authorizeRequests()
                 .antMatchers("/", "/login", "/login/**", "/register", "/logout").permitAll()
                 .antMatchers("/admin", "/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
-            .formLogin()
+                .formLogin()
                 .loginPage("/login").permitAll().failureUrl("/login?error")
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .and()
-            .logout().permitAll().logoutSuccessUrl("/login?logout")
+                .logout().permitAll().logoutSuccessUrl("/login?logout")
                 .and()
-            .csrf()
+                .csrf()
                 .and()
-            .exceptionHandling().accessDeniedPage("/403");
+                .exceptionHandling().accessDeniedPage("/403");
     }
 
     @Bean
