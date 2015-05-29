@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vivid.entity.User;
 import vivid.repository.UserRepository;
+import vivid.repository.cassandra.PinsRepository;
 
 /**
  * Created by wujy on 15-5-27.
