@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.core.Ordered;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
@@ -22,11 +23,12 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        super.addViewControllers(registry);
-        registry.addViewController("signup").setViewName("signup");
-        registry.addViewController("login").setViewName("login");
-        registry.addViewController("welcome").setViewName("welcome");
-        registry.addViewController("admin").setViewName("admin");
+        registry.addViewController("/login").setViewName("sessions/new");
+        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+//        registry.addViewController("signup").setViewName("signup");
+//        registry.addViewController("login").setViewName("login");
+//        registry.addViewController("welcome").setViewName("welcome");
+//        registry.addViewController("admin").setViewName("admin");
     }
 
     @Bean

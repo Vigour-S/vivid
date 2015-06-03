@@ -16,7 +16,11 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-web:1.2.3.RELEASE"
     compile "org.springframework.boot:spring-boot-starter-actuator:1.2.3.RELEASE"
     compile "org.springframework.boot:spring-boot-starter-redis:1.2.3.RELEASE"
-    compile "org.springframework.boot:spring-boot-starter-security:1.2.3.RELEASE"
+//    compile "org.springframework.boot:spring-boot-starter-security:1.2.3.RELEASE"
+
+    compile "org.apache.shiro:shiro-core:1.2.3"
+    compile "org.apache.shiro:shiro-web:1.2.3"
+    compile "org.apache.shiro:shiro-spring:1.2.3"
 
     // Jade is used as the template engine for serving HTML
     compile "com.domingosuarez.boot:spring-boot-starter-jade4j:0.2"

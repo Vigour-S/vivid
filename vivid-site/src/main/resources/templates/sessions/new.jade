@@ -1,4 +1,19 @@
-extends ../layouts/default
-
-block body
-  <h1>Login</h1>
+!!! 5
+html
+  head
+    title Login
+  body
+    div
+      form(name='f', action='/login', method='post')
+        fieldset
+          legend Please Login
+          if param.error
+            .alert.alert-error Invalid username and password.
+          if param.logout
+            .alert.alert-success You have been logged out.
+          label(for='username') Username
+          input#username(type='text', name='username')
+          label(for='password') Password
+          input#password(type='password', name='password')
+          .form-actions
+              button.btn(type='submit') Log in

@@ -29,7 +29,7 @@ public class SpringWebAppInitializer extends AbstractAnnotationConfigDispatcherS
     @Override
     protected Filter[] getServletFilters() {
         return new Filter[]{
-                new DelegatingFilterProxy("springSecurityFilterChain"),
+                new DelegatingFilterProxy("org.apache.shiro.web.servlet.IniShiroFilter"),
                 new OpenEntityManagerInViewFilter()};
     }
 

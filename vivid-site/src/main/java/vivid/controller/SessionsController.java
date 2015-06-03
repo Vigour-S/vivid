@@ -16,9 +16,9 @@ public class SessionsController {
     @Autowired
     private UserRepository userRepository;
 
-    @RequestMapping(value = "/login", method = GET)
-    public String login() {
-        return "sessions/new";
-    }
+//    @RequestMapping(value = "/login", method = GET)
+//    public String login() {
+//        return "sessions/new";
+//    }
 
 }
