@@ -6,7 +6,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.cassandra.config.CassandraClusterFactoryBean;
-import org.springframework.data.cassandra.config.java.AbstractCassandraConfiguration;
+import org.springframework.data.cassandra.config.CassandraSessionFactoryBean;
+import org.springframework.data.cassandra.config.SchemaAction;
+import org.springframework.data.cassandra.convert.CassandraConverter;
+import org.springframework.data.cassandra.convert.MappingCassandraConverter;
+import org.springframework.data.cassandra.core.CassandraOperations;
+import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.data.cassandra.mapping.BasicCassandraMappingContext;
 import org.springframework.data.cassandra.mapping.CassandraMappingContext;
 import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
@@ -17,7 +22,7 @@ import org.springframework.data.cassandra.repository.config.EnableCassandraRepos
 @Configuration
 @PropertySource(value = {"classpath:cassandra.properties"})
 @EnableCassandraRepositories(basePackages = {"vivid.repository.cassandra"})
-public class CassandraConfig extends AbstractCassandraConfiguration {
+public class CassandraConfig {
 
     @Autowired
     private Environment environment;
@@ -30,14 +35,31 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
         return cluster;
     }
 
-    @Override
-    protected String getKeyspaceName() {
-        return environment.getProperty("cassandra.keyspace");
+    @Bean
+    public CassandraMappingContext mappingContext() {
+        return new BasicCassandraMappingContext();
     }
 
     @Bean
-    public CassandraMappingContext cassandraMapping() throws ClassNotFoundException {
-        return new BasicCassandraMappingContext();
+    public CassandraConverter converter() {
+        return new MappingCassandraConverter(mappingContext());
+    }
+
+    @Bean
+    public CassandraSessionFactoryBean session() throws Exception {
+
+        CassandraSessionFactoryBean session = new CassandraSessionFactoryBean();
+        session.setCluster(cluster().getObject());
+        session.setKeyspaceName(environment.getProperty("cassandra.keyspace"));
+        session.setConverter(converter());
+        session.setSchemaAction(SchemaAction.NONE);
+
+        return session;
+    }
+
+    @Bean
+    public CassandraOperations cassandraTemplate() throws Exception {
+        return new CassandraTemplate(session().getObject());
     }
 
 }
