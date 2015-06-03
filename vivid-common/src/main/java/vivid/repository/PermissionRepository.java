@@ -10,4 +10,6 @@ import vivid.entity.Permission;
 @Repository
 public interface PermissionRepository extends JpaRepository<Permission, Long> {
 
+    Permission findByName(String name);
+
 }

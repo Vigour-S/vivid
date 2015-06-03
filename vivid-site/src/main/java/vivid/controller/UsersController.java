@@ -1,21 +1,20 @@
 package vivid.controller;
 
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import vivid.entity.Permission;
-import vivid.entity.User;
 import vivid.entity.Role;
+import vivid.entity.User;
 import vivid.repository.PermissionRepository;
 import vivid.repository.RoleRepository;
 import vivid.repository.UserRepository;
@@ -43,15 +42,6 @@ public class UsersController {
     @Autowired
     private PermissionRepository permissionRepository;
 
-    @RequestMapping(value = "/auth", method = RequestMethod.POST)
-    public void authenticate(@RequestBody final UsernamePasswordToken credentials) {
-        log.info("Authenticating {}", credentials.getUsername());
-        final Subject subject = SecurityUtils.getSubject();
-        subject.login(credentials);
-        // set attribute that will allow session querying
-        subject.getSession().setAttribute("email", credentials.getUsername());
-    }
-
     @RequestMapping(method = RequestMethod.GET)
     @RequiresAuthentication
     @RequiresRoles("ADMIN")
@@ -59,10 +49,12 @@ public class UsersController {
         return userRepository.findAll();
     }
 
-    @RequestMapping(value="do_something", method = RequestMethod.GET)
+    @RequestMapping(value = "do_something", method = RequestMethod.GET)
     @RequiresAuthentication
-    @RequiresRoles("DO_SOMETHING")
+    @RequiresPermissions("DO_SOMETHING")
     public List<User> dontHavePermission() {
+        final Subject subject = SecurityUtils.getSubject();
+        subject.checkPermission("DO_SOMETHING");
         return userRepository.findAll();
     }
 
@@ -88,6 +80,10 @@ public class UsersController {
         roleAdmin.setName("ADMIN");
         roleAdmin.getPermissions().add(p1);
         roleRepository.save(roleAdmin);
+        final Role roleUser = new Role();
+        roleUser.setName("USER");
+        roleUser.getPermissions().add(p2);
+        roleRepository.save(roleUser);
 
         // define user
         final User user = new User();
