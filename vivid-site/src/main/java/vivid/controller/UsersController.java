@@ -18,6 +18,7 @@ public class UsersController {
 
     @RequestMapping(value = "/signup", method = GET)
     public String signUp() {
+        System.out.println("in UsersController");
         return "users/new";
     }
 
