@@ -1,4 +1,4 @@
-package vivid.service;
+package vivid.support;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import vivid.entity.SecurityUser;
 import vivid.entity.User;
+import vivid.repository.UserRepository;
 
 /**
  * Created by wujy on 15-5-12.
@@ -15,12 +16,12 @@ import vivid.entity.User;
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
-        User user = userService.findByUsernameOrEmail(username, username);
+        User user = userRepository.findByUsernameOrEmail(username, username);
         if (user == null) {
             throw new UsernameNotFoundException("UserName " + username + " not found");
         }

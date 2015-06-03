@@ -3,8 +3,7 @@ package vivid.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import vivid.entity.User;
-import vivid.service.UserService;
+import vivid.repository.UserRepository;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -15,13 +14,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class SessionsController {
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @RequestMapping(value = "/login", method = GET)
     public String login() {
-        System.out.println("in SessionsController");
-        User user = new User("wujy", "123456", "123@456.com");
-        userService.save(user);
         return "sessions/new";
     }
 
