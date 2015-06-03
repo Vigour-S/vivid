@@ -19,7 +19,7 @@ public class SessionsController {
 
     @RequestMapping(value = "/login", method = GET)
     public String login() {
-        System.out.println("!!!!!");
+        System.out.println("in SessionsController");
         User user = new User("wujy", "123456", "123@456.com");
         userService.save(user);
         return "sessions/new";

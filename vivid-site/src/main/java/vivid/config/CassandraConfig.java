@@ -8,7 +8,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.cassandra.config.CassandraClusterFactoryBean;
 import org.springframework.data.cassandra.config.CassandraSessionFactoryBean;
 import org.springframework.data.cassandra.config.SchemaAction;
-import org.springframework.data.cassandra.config.java.AbstractCassandraConfiguration;
 import org.springframework.data.cassandra.convert.CassandraConverter;
 import org.springframework.data.cassandra.convert.MappingCassandraConverter;
 import org.springframework.data.cassandra.core.CassandraOperations;

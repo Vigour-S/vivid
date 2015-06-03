@@ -1,4 +1,4 @@
-package vivid.feed;
+package vivid.feed.compositekey;
 
 import java.io.Serializable;
 import java.util.UUID;

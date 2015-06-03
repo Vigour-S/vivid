@@ -5,6 +5,7 @@ import java.util.Date;
 import org.springframework.data.cassandra.mapping.Column;
 import org.springframework.data.cassandra.mapping.PrimaryKey;
 import org.springframework.data.cassandra.mapping.Table;
+import vivid.feed.compositekey.FollowersKey;
 
 /**
  * Created by xiezhuohan on 15-5-27.
