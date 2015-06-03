@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,6 +33,13 @@ public class SessionsController {
     @Autowired
     private RoleRepository roleRepository;
 
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String index(Model model) {
+        final Subject subject = SecurityUtils.getSubject();
+        model.addAttribute("user", subject.getPrincipal());
+        return "index";
+    }
+
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login() {
         return "sessions/new";
@@ -50,20 +58,23 @@ public class SessionsController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public void authenticate(@RequestParam String username, @RequestParam String password) {
+    public String authenticate(@RequestParam String username, @RequestParam String password, @RequestParam(defaultValue = "false") Boolean rememberMe) {
         UsernamePasswordToken credentials = new UsernamePasswordToken(username, password);
+        credentials.setRememberMe(rememberMe);
         log.info("Authenticating {}", credentials.getUsername());
         final Subject subject = SecurityUtils.getSubject();
         subject.login(credentials);
         // set attribute that will allow session querying
         subject.getSession().setAttribute("email", credentials.getUsername());
+        return "redirect:/";
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public void register(@RequestParam String email, @RequestParam String username, @RequestParam String password) {
+    public String register(@RequestParam String email, @RequestParam String username, @RequestParam String password) {
         User user = new User(username, passwordService.encryptPassword(password), email);
         user.getRoles().add(roleRepository.findByName("USER"));
         userRepository.save(user);
+        return "redirect:/";
     }
 
 }
