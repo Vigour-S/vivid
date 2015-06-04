@@ -1,11 +1,13 @@
 package vivid.entity;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.UUID;
 
 /**
  * Created by wujy on 15-5-14.
@@ -15,9 +17,10 @@ import java.time.ZonedDateTime;
 public abstract class BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator="system-uuid")
+    @GenericGenerator(name="system-uuid", strategy = "uuid2")
     @Column(name = "id")
-    private Long id;
+    private UUID id;
 
     @CreatedDate
     @Column(name = "created_date")
@@ -27,11 +30,11 @@ public abstract class BaseEntity {
     @Column(name = "modified_date")
     private ZonedDateTime modifiedDate;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
