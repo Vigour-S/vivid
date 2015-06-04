@@ -2,8 +2,12 @@ package vivid.entity;
 
 import org.hibernate.validator.constraints.Email;
 
-import javax.persistence.*;
-import java.util.HashSet;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -16,15 +20,15 @@ public class User extends BaseEntity {
     @Column(name = "username", unique = true, nullable = false, length = 45)
     private String username;
 
-    @Column(name = "password", nullable = false, length = 60)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Email
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private Set<UserRole> userRoles = new HashSet<UserRole>(0);
+    @OneToMany
+    private List<Role> roles;
 
     public User() {
 
@@ -36,11 +40,19 @@ public class User extends BaseEntity {
         this.email = email;
     }
 
-    public User(String username, String password, String email, Set<UserRole> userRoles) {
+    public User(String username, String password, String email, List<Role> roles) {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.userRoles = userRoles;
+        this.roles = roles;
+    }
+
+    public void addRole(Role role) {
+        this.roles.add(role);
+    }
+
+    public void addRole(Set<Role> roles) {
+        this.roles.addAll(roles);
     }
 
     public String getUsername() {
@@ -67,12 +79,15 @@ public class User extends BaseEntity {
         this.email = email;
     }
 
-    public Set<UserRole> getUserRoles() {
-        return userRoles;
+    public List<Role> getRoles() {
+        if (roles == null) {
+            this.roles = new ArrayList<Role>();
+        }
+        return roles;
     }
 
-    public void setUserRoles(Set<UserRole> userRoles) {
-        this.userRoles = userRoles;
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 
 }

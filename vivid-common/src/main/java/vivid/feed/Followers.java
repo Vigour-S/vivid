@@ -1,18 +1,17 @@
 package vivid.feed;
 
-import java.util.Date;
-
 import org.springframework.data.cassandra.mapping.Column;
 import org.springframework.data.cassandra.mapping.PrimaryKey;
 import org.springframework.data.cassandra.mapping.Table;
 import vivid.feed.compositekey.FollowersKey;
 
+import java.util.Date;
+
 /**
  * Created by xiezhuohan on 15-5-27.
  */
-
 @Table(value = "followers")
-public class Followers{
+public class Followers {
 
     @PrimaryKey
     private FollowersKey pk;

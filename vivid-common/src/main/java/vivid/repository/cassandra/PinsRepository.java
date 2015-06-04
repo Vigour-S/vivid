@@ -8,7 +8,6 @@ import java.util.UUID;
 /**
  * Created by xiezhuohan on 15-5-28.
  */
-
-public interface PinsRepository extends TypedIdCassandraRepository<Pins,UUID> {
+public interface PinsRepository extends TypedIdCassandraRepository<Pins, UUID> {
 
 }

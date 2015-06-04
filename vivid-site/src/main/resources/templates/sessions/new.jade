@@ -1,4 +1,19 @@
-extends ../layouts/default
-
+extends ../layouts/layout
+block page_title
+    .col-md-12.col-sm-6.col-xs-12
+        h1 Login
+            small Welcome to use Vision Explorer
 block body
-  <h1>Login</h1>
+    h1 Login
+        div
+            form(name='f', action='/login', method='post')
+                fieldset
+                    legend Please Login
+                    label(for='username') Username
+                    input#username(type='text', name='username')
+                    label(for='password') Password
+                    input#password(type='password', name='password')
+                    label(for='rememberMe') Remember Me?
+                    input#rememberMe(type='checkbox', name='rememberMe', value='true')
+                    .form-actions
+                        button.btn(type='submit') Log in

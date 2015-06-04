@@ -1,24 +1,23 @@
 package vivid.feed.compositekey;
 
-import java.io.Serializable;
-import java.util.UUID;
-
 import org.springframework.cassandra.core.PrimaryKeyType;
 import org.springframework.data.cassandra.mapping.PrimaryKeyClass;
 import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
 
+import java.io.Serializable;
+import java.util.UUID;
+
 /**
  * Created by xiezhuohan on 15-5-27.
  */
-
 @PrimaryKeyClass
-public class FollowingsKey implements Serializable {
+public class FollowersKey implements Serializable {
 
     @PrimaryKeyColumn(name = "user_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private UUID userId;
 
-    @PrimaryKeyColumn(name = "following_id", ordinal = 1, type = PrimaryKeyType.CLUSTERED)
-    private UUID followingId;
+    @PrimaryKeyColumn(name = "follower_id", ordinal = 1, type = PrimaryKeyType.CLUSTERED)
+    private UUID followerId;
 
     public UUID getUserId() {
         return userId;
@@ -28,19 +27,19 @@ public class FollowingsKey implements Serializable {
         this.userId = userId;
     }
 
-    public UUID getFollowingId() {
-        return followingId;
+    public UUID getFollowerId() {
+        return followerId;
     }
 
-    public void setFollowingId(UUID followingId) {
-        this.followingId = followingId;
+    public void setFollowerId(UUID followerId) {
+        this.followerId = followerId;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((followingId == null) ? 0 : followingId.hashCode());
+        result = prime * result + ((followerId == null) ? 0 : followerId.hashCode());
         result = prime * result + ((userId == null) ? 0 : userId.hashCode());
         return result;
     }
@@ -53,11 +52,11 @@ public class FollowingsKey implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        FollowingsKey other = (FollowingsKey) obj;
-        if (followingId == null) {
-            if (other.followingId != null)
+        FollowersKey other = (FollowersKey) obj;
+        if (followerId == null) {
+            if (other.followerId != null)
                 return false;
-        } else if (!followingId.equals(other.followingId))
+        } else if (!followerId.equals(other.followerId))
             return false;
         if (userId == null) {
             if (other.userId != null)
@@ -66,4 +65,5 @@ public class FollowingsKey implements Serializable {
             return false;
         return true;
     }
+
 }

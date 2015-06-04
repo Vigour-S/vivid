@@ -1,17 +1,16 @@
 package vivid.feed.compositekey;
 
-import java.io.Serializable;
-import java.util.UUID;
-
-import org.springframework.cassandra.core.PrimaryKeyType;
 import org.springframework.cassandra.core.Ordering;
+import org.springframework.cassandra.core.PrimaryKeyType;
 import org.springframework.data.cassandra.mapping.PrimaryKeyClass;
 import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
+
+import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * Created by xiezhuohan on 15-5-27.
  */
-
 @PrimaryKeyClass
 public class TimeLineKey implements Serializable {
 
@@ -68,4 +67,5 @@ public class TimeLineKey implements Serializable {
             return false;
         return true;
     }
+
 }
