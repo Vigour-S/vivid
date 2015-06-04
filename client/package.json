@@ -28,6 +28,6 @@
   },
   "scripts": {
     "prepublish": "bower install --config.interactive=false",
-    "build": "grunt build"
+    "build": "echo 0"
   }
 }
