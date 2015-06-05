@@ -2,13 +2,10 @@ package vivid.controller;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
-import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,21 +40,18 @@ public class UsersController {
     private PermissionRepository permissionRepository;
 
     @RequestMapping(method = RequestMethod.GET)
-    @RequiresAuthentication
-    @RequiresRoles("ADMIN")
     public List<User> getAll() {
+        SecurityUtils.getSubject().checkRole("ADMIN");
         return userRepository.findAll();
     }
 
     @RequestMapping(value = "do_something", method = RequestMethod.GET)
-    @RequiresAuthentication
-    @RequiresPermissions("DO_SOMETHING")
     public List<User> dontHavePermission() {
-        final Subject subject = SecurityUtils.getSubject();
-        subject.checkPermission("DO_SOMETHING");
+        SecurityUtils.getSubject().checkPermission("DO_SOMETHING");
         return userRepository.findAll();
     }
 
+    @Transactional
     @RequestMapping(method = RequestMethod.PUT)
     public void initScenario() {
         log.info("Initializing scenario..");
@@ -72,13 +66,14 @@ public class UsersController {
         p1.setName("VIEW_ALL_USERS");
         permissionRepository.save(p1);
         final Permission p2 = new Permission();
-        p2.setName("DO_SOMETHING");
+        p2.setName("UPLOAD");
         permissionRepository.save(p2);
 
         // define roles
         final Role roleAdmin = new Role();
         roleAdmin.setName("ADMIN");
         roleAdmin.getPermissions().add(p1);
+        roleAdmin.getPermissions().add(p2);
         roleRepository.save(roleAdmin);
         final Role roleUser = new Role();
         roleUser.setName("USER");
@@ -86,12 +81,25 @@ public class UsersController {
         roleRepository.save(roleUser);
 
         // define user
-        final User user = new User();
-        user.setEmail("wujysh@gmail.com");
-        user.setUsername("Jiaye Wu");
-        user.setPassword(passwordService.encryptPassword("123456"));
-        user.getRoles().add(roleAdmin);
-        userRepository.save(user);
+        final User userAdmin = new User();
+        userAdmin.setEmail("wujysh@gmail.com");
+        userAdmin.setUsername("Jiaye Wu");
+        userAdmin.setPassword(passwordService.encryptPassword("123456"));
+        userAdmin.getRoles().add(roleAdmin);
+        userRepository.save(userAdmin);
+        final User userUser1 = new User();
+        userUser1.setEmail("fantasticfears@gmail.com");
+        userUser1.setUsername("Erick Guan");
+        userUser1.setPassword(passwordService.encryptPassword("123456"));
+        userUser1.getRoles().add(roleUser);
+        userRepository.save(userUser1);
+        final User userUser2 = new User();
+        userUser2.setEmail("jasonxzh818@gmail.com");
+        userUser2.setUsername("Jason Xie");
+        userUser2.setPassword(passwordService.encryptPassword("123456"));
+        userUser2.getRoles().add(roleUser);
+        userRepository.save(userUser2);
+
         log.info("Scenario initiated.");
     }
 

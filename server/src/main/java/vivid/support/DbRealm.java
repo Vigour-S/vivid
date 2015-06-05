@@ -1,4 +1,4 @@
-package vivid.shiro;
+package vivid.support;
 
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;

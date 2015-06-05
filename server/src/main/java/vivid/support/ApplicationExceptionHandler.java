@@ -1,4 +1,4 @@
-package vivid.shiro;
+package vivid.support;
 
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -25,14 +25,14 @@ public class ApplicationExceptionHandler {
                     UnauthorizedException.class
             }
     )
-    public void unauthorized() {
-
+    public String unauthorized() {
+        return "redirect:/login";
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler({DataAccessException.class})
-    public void dataAccessException() {
-
+    public String dataAccessException() {
+        return "redirect:/";
     }
 
 }
