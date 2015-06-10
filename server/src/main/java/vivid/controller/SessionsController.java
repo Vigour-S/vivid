@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -52,8 +53,7 @@ public class SessionsController {
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logout() {
-        final Subject subject = SecurityUtils.getSubject();
-        subject.logout();
+        SecurityUtils.getSubject().logout();
         return "sessions/new";
     }
 
@@ -69,6 +69,7 @@ public class SessionsController {
         return "redirect:/";
     }
 
+    @Transactional
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public String register(@RequestParam String email, @RequestParam String username, @RequestParam String password) {
         User user = new User(username, passwordService.encryptPassword(password), email);
