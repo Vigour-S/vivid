@@ -2,10 +2,8 @@ package vivid.entity;
 
 import org.hibernate.validator.constraints.Email;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -27,7 +25,13 @@ public class User extends BaseEntity {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @OneToMany
+    @Column(name = "nickname")
+    private String nickname;
+
+    @Column(name = "last_login_date")
+    private ZonedDateTime lastLoginDate;
+
+    @ManyToMany
     private List<Role> roles;
 
     public User() {
@@ -77,6 +81,22 @@ public class User extends BaseEntity {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public ZonedDateTime getLastLoginDate() {
+        return lastLoginDate;
+    }
+
+    public void setLastVisitedDate(ZonedDateTime lastVisitedDate) {
+        this.lastLoginDate = lastVisitedDate;
     }
 
     public List<Role> getRoles() {

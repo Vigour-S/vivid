@@ -13,6 +13,7 @@ import vivid.entity.Role;
 import vivid.entity.User;
 import vivid.repository.UserRepository;
 
+import java.time.ZonedDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -29,14 +30,22 @@ public class DbRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(final AuthenticationToken token)
             throws AuthenticationException {
         final UsernamePasswordToken credentials = (UsernamePasswordToken) token;
-        final String email = credentials.getUsername();
+        String email = credentials.getUsername();
         if (email == null) {
-            throw new UnknownAccountException("Email not provided");
+            throw new UnknownAccountException("Email/Username not provided");
         }
-        final User user = userRepository.findByEmail(email);
+        final User user = userRepository.findByUsernameOrEmail(email, email);
         if (user == null) {
             throw new UnknownAccountException("Account does not exist");
         }
+
+        // restore credential to username
+        email = user.getUsername();
+
+        // record user last login date
+        user.setLastVisitedDate(ZonedDateTime.now());
+        userRepository.save(user);
+
         return new SimpleAuthenticationInfo(email, user.getPassword().toCharArray(),
                 ByteSource.Util.bytes(email), getName());
     }
