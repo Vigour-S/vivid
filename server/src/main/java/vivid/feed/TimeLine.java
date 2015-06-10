@@ -35,4 +35,9 @@ public class TimeLine {
         this.pinId = pinId;
     }
 
+    public TimeLine(TimeLineKey pk, UUID pinId){
+        this.pk = pk;
+        this.pinId = pinId;
+    }
+
 }

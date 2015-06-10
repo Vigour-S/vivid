@@ -35,6 +35,11 @@ public class FollowersKey implements Serializable {
         this.followerId = followerId;
     }
 
+    public FollowersKey(UUID userId, UUID followerId){
+        this.userId = userId;
+        this.followerId = followerId;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;

@@ -73,7 +73,7 @@ public class UsersController {
         final Role roleAdmin = new Role();
         roleAdmin.setName("ADMIN");
         roleAdmin.getPermissions().add(p1);
-        roleAdmin.getPermissions().add(p2);
+//        roleAdmin.getPermissions().add(p2);
         roleRepository.save(roleAdmin);
         final Role roleUser = new Role();
         roleUser.setName("USER");
@@ -93,12 +93,12 @@ public class UsersController {
         userUser1.setPassword(passwordService.encryptPassword("123456"));
         userUser1.getRoles().add(roleUser);
         userRepository.save(userUser1);
-        final User userUser2 = new User();
-        userUser2.setEmail("jasonxzh818@gmail.com");
-        userUser2.setUsername("Jason Xie");
-        userUser2.setPassword(passwordService.encryptPassword("123456"));
-        userUser2.getRoles().add(roleUser);
-        userRepository.save(userUser2);
+//        final User userUser2 = new User();
+//        userUser2.setEmail("jasonxzh818@gmail.com");
+//        userUser2.setUsername("Jason Xie");
+//        userUser2.setPassword(passwordService.encryptPassword("123456"));
+//        userUser2.getRoles().add(roleUser);
+//        userRepository.save(userUser2);
 
         log.info("Scenario initiated.");
     }

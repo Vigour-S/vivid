@@ -35,4 +35,9 @@ public class Followers {
         this.since = since;
     }
 
+    public  Followers(FollowersKey pk, Date since){
+        this.pk = pk;
+        this.since = since;
+    }
+
 }

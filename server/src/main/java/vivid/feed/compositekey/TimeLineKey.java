@@ -6,6 +6,7 @@ import org.springframework.data.cassandra.mapping.PrimaryKeyClass;
 import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -19,7 +20,7 @@ public class TimeLineKey implements Serializable {
 
     @PrimaryKeyColumn(name = "time", ordinal = 1, type = PrimaryKeyType.CLUSTERED,
             ordering = Ordering.DESCENDING)
-    private UUID time;
+    private Date time;
 
     public UUID getUserId() {
         return userId;
@@ -29,11 +30,16 @@ public class TimeLineKey implements Serializable {
         this.userId = userId;
     }
 
-    public UUID getTime() {
+    public Date getTime() {
         return time;
     }
 
-    public void setTime(UUID time) {
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
+    public  TimeLineKey(UUID userId, Date time){
+        this.userId = userId;
         this.time = time;
     }
 
