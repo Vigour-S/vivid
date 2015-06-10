@@ -54,7 +54,7 @@ public class DbRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(final PrincipalCollection principals) {
         // retrieve role names and permission names
         final String email = (String) principals.getPrimaryPrincipal();
-        final User user = userRepository.findByEmail(email);
+        final User user = userRepository.findByUsernameOrEmail(email, email);
         if (user == null) {
             throw new UnknownAccountException("Account does not exist");
         }
