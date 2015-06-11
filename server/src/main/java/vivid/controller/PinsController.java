@@ -1,9 +1,6 @@
 package vivid.controller;
 
-import com.datastax.driver.core.Row;
-import com.datastax.driver.core.exceptions.DriverException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cassandra.core.RowMapper;
 import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +15,7 @@ import vivid.repository.cassandra.FollowersRepository;
 import vivid.repository.cassandra.FollowingsRepository;
 import vivid.repository.cassandra.PinsRepository;
 import vivid.repository.cassandra.TimeLineRepository;
+import vivid.service.FeedService;
 
 import java.util.Date;
 import java.util.List;
@@ -43,6 +41,9 @@ public class PinsController {
     private PinsRepository pinsRepository;
 
     @Autowired
+    private FeedService feedService;
+
+    @Autowired
     private TimeLineRepository timeLineRepository;
 
     @Autowired
@@ -61,21 +62,9 @@ public class PinsController {
 //            timeLineRepository.save(timeLine);
 //        }
         UUID userId = userRepository.findByUsername(username).getId();
-        //String cql = "select * from followers where user_id = bfd2c7d4-8cf4-4933-88e7-f2792d075540";
-        //List<Followers> followerses = followersRepository.findByUserId(userId);
-        // Select s = QueryBuilder.select().from("followers");
-        //s.where(QueryBuilder.eq("user_id", userId));
-        //List<Followers> followerses = cassandraOperations.queryForList(cql, Followers.class);
-        String cqlAll = "select * from followers";
-        List<Followers> results = cassandraOperations.query(cqlAll, new RowMapper<Followers>() {
-            @Override
-            public Followers mapRow(Row row, int rowNum) throws DriverException {
-                Followers f = new Followers(row.getUUID("user_id"), row.getUUID("follower_id"), row.getDate("since"));
-                return f;
-            }
-        });
-        for (Followers f : results) {
-            System.out.println(f.getPk().getUserId());
+        List<Followers> followers = feedService.findFollowersByUserId(userId);
+        for (Followers follower : followers) {
+            System.out.println(follower.getPk().getUserId());
         }
         return null;
     }

@@ -19,22 +19,6 @@ public class FollowingsKey implements Serializable {
     @PrimaryKeyColumn(name = "following_id", ordinal = 1, type = PrimaryKeyType.CLUSTERED)
     private UUID followingId;
 
-    public UUID getUserId() {
-        return userId;
-    }
-
-    public void setUserId(UUID userId) {
-        this.userId = userId;
-    }
-
-    public UUID getFollowingId() {
-        return followingId;
-    }
-
-    public void setFollowingId(UUID followingId) {
-        this.followingId = followingId;
-    }
-
     public FollowingsKey(UUID userId, UUID followingId) {
         this.userId = userId;
         this.followingId = followingId;
@@ -69,6 +53,22 @@ public class FollowingsKey implements Serializable {
         } else if (!userId.equals(other.userId))
             return false;
         return true;
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
+    }
+
+    public UUID getFollowingId() {
+        return followingId;
+    }
+
+    public void setFollowingId(UUID followingId) {
+        this.followingId = followingId;
     }
 
 }
