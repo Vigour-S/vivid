@@ -10,5 +10,5 @@ import java.util.UUID;
  * Created by xiezhuohan on 15-6-3.
  */
 public interface TimeLineRepository extends TypedIdCassandraRepository<TimeLine, TimeLineKey> {
-    TimeLine findByUserId(UUID uuid);
+    //TimeLine findByUserId(UUID uuid);
 }

@@ -1,5 +1,6 @@
 package vivid.repository.cassandra;
 
+import org.springframework.data.cassandra.repository.Query;
 import org.springframework.data.cassandra.repository.TypedIdCassandraRepository;
 import vivid.feed.Followers;
 import vivid.feed.compositekey.FollowersKey;
@@ -11,6 +12,7 @@ import java.util.UUID;
  * Created by xiezhuohan on 15-6-3.
  */
 public interface FollowersRepository extends TypedIdCassandraRepository<Followers, FollowersKey> {
+    @Query("select * from followers where user_id = ?")
     List<Followers> findByUserId(UUID uuid);
 
 }

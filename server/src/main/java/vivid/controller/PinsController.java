@@ -1,6 +1,12 @@
 package vivid.controller;
 
+import com.datastax.driver.core.Row;
+import com.datastax.driver.core.exceptions.DriverException;
+import com.datastax.driver.core.querybuilder.QueryBuilder;
+import com.datastax.driver.core.querybuilder.Select;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cassandra.core.RowMapper;
+import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,19 +51,37 @@ public class PinsController {
     @Autowired
     private TimeLineRepository timeLineRepository;
 
+    @Autowired
+    private CassandraOperations cassandraOperations;
+
     @RequestMapping(value = "/post", method = RequestMethod.POST)
-    public String postPin(@RequestParam String username,
-                          @RequestParam UUID pinId,
-                          @RequestParam String description) {
+    public String postPin(@RequestParam String username) {
+//        UUID userId = userRepository.findByUsername(username).getId();
+//        pinsRepository.save(new Pins(pinId, userId, description));
+//        Date date = new Date();
+//        //TODO: 拉取
+//        List<Followers> followerses = followersRepository.findByUserId(userId);
+//        for( Followers followers : followerses){
+//            UUID tempId = followers.getPk().getUserId();
+//            TimeLine timeLine = new TimeLine(new TimeLineKey(tempId, date), pinId);
+//            timeLineRepository.save(timeLine);
+//        }
         UUID userId = userRepository.findByUsername(username).getId();
-        pinsRepository.save(new Pins(pinId, userId, description));
-        Date date = new Date();
-        //TODO: 拉取
-        List<Followers> followerses = followersRepository.findByUserId(userId);
-        for( Followers followers : followerses){
-            UUID tempId = followers.getPk().getUserId();
-            TimeLine timeLine = new TimeLine(new TimeLineKey(tempId, date), pinId);
-            timeLineRepository.save(timeLine);
+        //String cql = "select * from followers where user_id = bfd2c7d4-8cf4-4933-88e7-f2792d075540";
+        //List<Followers> followerses = followersRepository.findByUserId(userId);
+       // Select s = QueryBuilder.select().from("followers");
+        //s.where(QueryBuilder.eq("user_id", userId));
+        //List<Followers> followerses = cassandraOperations.queryForList(cql, Followers.class);
+        String cqlAll = "select * from followers";
+        List<Followers> results = cassandraOperations.query(cqlAll, new RowMapper<Followers>() {
+            @Override
+            public Followers mapRow(Row row, int rowNum) throws DriverException {
+                Followers f = new Followers(row.getUUID("user_id"), row.getUUID("follower_id"),row.getDate("since"));
+                return f;
+            }
+        });
+        for (Followers f : results) {
+            System.out.println(f.getPk().getUserId());
         }
         return null;
     }
@@ -84,8 +108,12 @@ public class PinsController {
     }
 
     public String showTimeLine(@RequestParam String username){
-        List<Pins> pinses;
-        timeLineRepository.findByUserId(userRepository.findByUsername(username).getId());
+//        List<Pins> pinses;
+//        timeLineRepository.findByUserId(userRepository.findByUsername(username).getId());
+        Iterable<Followers> followerses = followersRepository.findAll();
+        for (Followers followers : followerses) {
+            System.out.println(followers.getPk().getUserId());
+        }
         return null;
     }
 
