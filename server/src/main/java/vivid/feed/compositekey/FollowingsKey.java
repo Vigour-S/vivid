@@ -35,7 +35,7 @@ public class FollowingsKey implements Serializable {
         this.followingId = followingId;
     }
 
-    public FollowingsKey(UUID userId, UUID followingId){
+    public FollowingsKey(UUID userId, UUID followingId) {
         this.userId = userId;
         this.followingId = followingId;
     }

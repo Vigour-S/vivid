@@ -19,6 +19,11 @@ public class Followings {
     @Column(value = "since")
     private Date since;
 
+    public Followings(FollowingsKey pk, Date since) {
+        this.pk = pk;
+        this.since = since;
+    }
+
     public FollowingsKey getPk() {
         return pk;
     }
@@ -32,11 +37,6 @@ public class Followings {
     }
 
     public void setSince(Date since) {
-        this.since = since;
-    }
-
-    public Followings(FollowingsKey pk, Date since){
-        this.pk = pk;
         this.since = since;
     }
 

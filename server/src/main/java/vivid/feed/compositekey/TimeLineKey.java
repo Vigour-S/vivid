@@ -38,7 +38,7 @@ public class TimeLineKey implements Serializable {
         this.time = time;
     }
 
-    public  TimeLineKey(UUID userId, Date time){
+    public TimeLineKey(UUID userId, Date time) {
         this.userId = userId;
         this.time = time;
     }

@@ -19,6 +19,11 @@ public class TimeLine {
     @Column(value = "pin_id")
     private UUID pinId;
 
+    public TimeLine(TimeLineKey pk, UUID pinId) {
+        this.pk = pk;
+        this.pinId = pinId;
+    }
+
     public TimeLineKey getPk() {
         return pk;
     }
@@ -32,11 +37,6 @@ public class TimeLine {
     }
 
     public void setPinId(UUID pinId) {
-        this.pinId = pinId;
-    }
-
-    public TimeLine(TimeLineKey pk, UUID pinId){
-        this.pk = pk;
         this.pinId = pinId;
     }
 

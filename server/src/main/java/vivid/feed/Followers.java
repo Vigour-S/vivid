@@ -20,6 +20,16 @@ public class Followers {
     @Column(value = "since")
     private Date since;
 
+    public Followers(FollowersKey pk, Date since) {
+        this.pk = pk;
+        this.since = since;
+    }
+
+    public Followers(UUID userId, UUID followerId, Date since) {
+        this.pk = new FollowersKey(userId, followerId);
+        this.since = since;
+    }
+
     public FollowersKey getPk() {
         return pk;
     }
@@ -35,16 +45,5 @@ public class Followers {
     public void setSince(Date since) {
         this.since = since;
     }
-
-    public  Followers(FollowersKey pk, Date since){
-        this.pk = pk;
-        this.since = since;
-    }
-
-    public  Followers(UUID userId, UUID followerId, Date since){
-        this.pk = new FollowersKey(userId,followerId);
-        this.since = since;
-    }
-
 
 }
