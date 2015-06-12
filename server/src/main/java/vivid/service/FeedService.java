@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cassandra.core.RowMapper;
 import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.stereotype.Service;
-import vivid.feed.Followers;
-import vivid.feed.Followings;
-import vivid.feed.Pins;
-import vivid.feed.TimeLine;
+import vivid.feed.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -69,4 +66,14 @@ public class FeedService {
         });
     }
 
+    public List<Comment> findCommentByPinId(UUID pinId) {
+        Select select = QueryBuilder.select().from("comment");
+        select.where(QueryBuilder.eq("pin_id", pinId));
+        return cassandraOperations.query(select, new RowMapper<Comment>() {
+            @Override
+            public Comment mapRow(Row row, int rowNum) throws DriverException {
+                return new Comment(row.getUUID("pin_id"), row.getDate("time"), row.getUUID("user_id"), row.getString("body"));
+            }
+        });
+    }
 }

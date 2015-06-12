@@ -6,18 +6,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import vivid.feed.Followers;
-import vivid.feed.Followings;
-import vivid.feed.Pins;
-import vivid.feed.TimeLine;
+import vivid.feed.*;
 import vivid.feed.compositekey.FollowersKey;
 import vivid.feed.compositekey.FollowingsKey;
 import vivid.feed.compositekey.TimeLineKey;
 import vivid.repository.UserRepository;
-import vivid.repository.cassandra.FollowersRepository;
-import vivid.repository.cassandra.FollowingsRepository;
-import vivid.repository.cassandra.PinsRepository;
-import vivid.repository.cassandra.TimeLineRepository;
+import vivid.repository.cassandra.*;
 import vivid.service.FeedService;
 
 import java.time.Duration;
@@ -52,6 +46,9 @@ public class PinsController {
 
     @Autowired
     private TimeLineRepository timeLineRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     static final long PERIOD = 30;
 
@@ -130,4 +127,17 @@ public class PinsController {
         return null;
     }
 
+    @RequestMapping(value = "/addComment", method = RequestMethod.POST)
+    public String createComment(@RequestParam UUID pinId, @RequestParam String username, @RequestParam String body) {
+        UUID userId = userRepository.findByUsername(username).getId();
+        Date date = new Date();
+        commentRepository.save(new Comment(pinId, date, userId, body));
+        return null;
+    }
+
+    @RequestMapping(value = "/listComment", method = RequestMethod.POST)
+    public String showComment(@RequestParam UUID pinId) {
+        List<Comment> comments = feedService.findCommentByPinId(pinId);
+        return null;
+    }
 }
