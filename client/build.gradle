@@ -37,7 +37,7 @@ task npmBuild(type:Exec, dependsOn: npmInstall) {
     logging.captureStandardError LogLevel.INFO
 
     inputs.dir "src"
-    inputs.file "Gruntfile.js"
+    inputs.file "gulpfile.js"
     outputs.dir "dist"
 
     if(Os.isFamily(Os.FAMILY_WINDOWS)) {

@@ -2,7 +2,8 @@
 *.jar
 *.war
 *.ear
-
+.cram
+dist
 *.log
 node_modules
 .idea
