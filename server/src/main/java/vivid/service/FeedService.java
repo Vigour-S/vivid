@@ -36,7 +36,7 @@ public class FeedService {
         });
     }
 
-    public  List<Followings> findFollowingsByUserId(UUID userId) {
+    public List<Followings> findFollowingsByUserId(UUID userId) {
         Select select = QueryBuilder.select().from("followings");
         select.where(QueryBuilder.eq("user_id", userId));
         return cassandraOperations.query(select, new RowMapper<Followings>() {

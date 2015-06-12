@@ -40,7 +40,9 @@ public class Pins {
         return userId;
     }
 
-    public Date getTime(){return time;}
+    public Date getTime() {
+        return time;
+    }
 
     public String getBody() {
         return body;

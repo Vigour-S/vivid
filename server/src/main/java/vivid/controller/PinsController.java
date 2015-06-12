@@ -2,7 +2,6 @@ package vivid.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -53,9 +52,6 @@ public class PinsController {
 
     @Autowired
     private TimeLineRepository timeLineRepository;
-
-    @Autowired
-    private CassandraOperations cassandraOperations;
 
     static final long PERIOD = 30;
 
