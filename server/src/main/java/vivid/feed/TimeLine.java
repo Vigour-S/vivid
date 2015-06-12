@@ -5,6 +5,7 @@ import org.springframework.data.cassandra.mapping.PrimaryKey;
 import org.springframework.data.cassandra.mapping.Table;
 import vivid.feed.compositekey.TimeLineKey;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -21,6 +22,11 @@ public class TimeLine {
 
     public TimeLine(TimeLineKey pk, UUID pinId) {
         this.pk = pk;
+        this.pinId = pinId;
+    }
+
+    public TimeLine(UUID userId, Date time, UUID pinId){
+        this.pk = new TimeLineKey(userId, time);
         this.pinId = pinId;
     }
 

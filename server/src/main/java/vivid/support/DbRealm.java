@@ -13,6 +13,8 @@ import vivid.entity.Role;
 import vivid.entity.User;
 import vivid.repository.UserRepository;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -43,7 +45,7 @@ public class DbRealm extends AuthorizingRealm {
         email = user.getUsername();
 
         // record user last login date
-        user.setLastVisitedDate(ZonedDateTime.now());
+        user.setLastVisitedDate(ZonedDateTime.of(LocalDateTime.now(), ZoneId.of("UTC+08:00")));
         userRepository.save(user);
 
         return new SimpleAuthenticationInfo(email, user.getPassword().toCharArray(),
