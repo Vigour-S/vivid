@@ -1,13 +1,7 @@
 package vivid.controller;
 
 
-import com.datastax.driver.core.Row;
-import com.datastax.driver.core.exceptions.DriverException;
-import com.datastax.driver.core.querybuilder.QueryBuilder;
-import com.datastax.driver.core.querybuilder.Select;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cassandra.core.RowMapper;
 import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +21,10 @@ import vivid.repository.cassandra.PinsRepository;
 import vivid.repository.cassandra.TimeLineRepository;
 import vivid.service.FeedService;
 
-import java.time.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -51,6 +48,7 @@ public class PinsController {
     @Autowired
     private PinsRepository pinsRepository;
 
+    @Autowired
     private FeedService feedService;
 
     @Autowired
@@ -114,11 +112,20 @@ public class PinsController {
                 userRepository.findById(userId).getLastLoginDate()
         );
         //pull
-        if(duration.toDays()<=-PERIOD){
+        if (duration.toDays() <= -PERIOD) {
             List<Followings> followings = feedService.findFollowingsByUserId(userId);
             for (Followings f : followings) {
                 UUID tempId = f.getPk().getUserId();
-                //TODO：find pins to pull
+                List<Pins> pins = pinsRepository.findByUserId(tempId);
+                for (Pins p : pins) {
+                    Duration d = Duration.between(userRepository.findById(userId).getLastLoginDate(),
+                            ZonedDateTime.of(LocalDateTime.ofInstant(p.getTime().toInstant(),
+                                            ZoneId.systemDefault()), ZoneId.of("UTC+08:00")
+                            )
+                    );
+                    if (d.toDays() >= PERIOD)
+                        timeLineRepository.save(new TimeLine(userId, p.getTime(), p.getPinId()));
+                }
             }
         }
         feedService.findTimelineByUserId(userId);
