@@ -1,6 +1,5 @@
 package vivid.controller;
 
-import org.apache.shiro.SecurityUtils;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,7 +29,7 @@ public class ResourcesController {
 
     @RequestMapping(value = "/upload", method = RequestMethod.GET)
     public String formUpload() {
-        SecurityUtils.getSubject().checkPermission("UPLOAD");
+        //SecurityUtils.getSubject().checkPermission("UPLOAD");
         return "resources/upload";
     }
 
@@ -47,7 +46,7 @@ public class ResourcesController {
     @Transactional
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public String handleFormUpload(@RequestParam MultipartFile file) {
-        SecurityUtils.getSubject().checkPermission("UPLOAD");
+        //SecurityUtils.getSubject().checkPermission("UPLOAD");
         try {
             if (file.isEmpty()) {
                 throw new FileUploadException("The file is empty.");
