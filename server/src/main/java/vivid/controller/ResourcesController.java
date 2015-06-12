@@ -1,5 +1,6 @@
 package vivid.controller;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,12 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import vivid.entity.Resource;
 import vivid.repository.ResourceRepository;
-
-import java.io.File;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
-import java.security.MessageDigest;
+import vivid.service.ResourceService;
 
 /**
  * Created by wujy on 15-6-4.
@@ -27,9 +23,12 @@ public class ResourcesController {
     @Autowired
     private ResourceRepository resourceRepository;
 
+    @Autowired
+    private ResourceService resourceService;
+
     @RequestMapping(value = "/upload", method = RequestMethod.GET)
     public String formUpload() {
-        //SecurityUtils.getSubject().checkPermission("UPLOAD");
+        SecurityUtils.getSubject().checkPermission("UPLOAD");
         return "resources/upload";
     }
 
@@ -46,25 +45,13 @@ public class ResourcesController {
     @Transactional
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public String handleFormUpload(@RequestParam MultipartFile file) {
-        //SecurityUtils.getSubject().checkPermission("UPLOAD");
+        SecurityUtils.getSubject().checkPermission("UPLOAD");
         try {
             if (file.isEmpty()) {
                 throw new FileUploadException("The file is empty.");
             }
-            byte[] bytes = file.getBytes();
 
-            // calculate the file checksum
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            md.update(bytes);
-            byte digestByteData[] = md.digest();
-
-            //convert the byte to hex format
-            StringBuilder sb = new StringBuilder();
-            for (byte byteData : digestByteData) {
-                sb.append(Integer.toString((byteData & 0xff) + 0x100, 16).substring(1));
-            }
-            System.out.println("File digest Hex format: " + sb.toString());
-            String digest = sb.toString();
+            String digest = resourceService.calcDigest(file.getBytes());
 
             // metadata persistence
             Resource resource = resourceRepository.findByDigest(digest);
@@ -74,17 +61,7 @@ public class ResourcesController {
             resource = resourceRepository.save(resource);
             System.out.println("Resource ID: " + resource.getId());
 
-            // store the bytes to file
-            String[] strs = resource.getId().toString().split("-");
-            String filename = "uploads";
-            for (String str : strs) {
-                filename += "/" + str;
-            }
-            new File(filename).mkdirs();  // create directories recursively
-            filename += "/" + file.getOriginalFilename();
-            // File digest format: `{Digest1}-{Digest2}-{Digest3}-{Digest4}`
-            // Save file to: `uploads/{Digest1}/{Digest2}/{Digest3}/{Digest4}/{OriginalFilename}`
-            Files.write(FileSystems.getDefault().getPath(filename), bytes, StandardOpenOption.CREATE);
+            resourceService.saveFile(file.getBytes(), resource.getId(), file.getOriginalFilename());
 
             return "resources/uploadSuccess";
         } catch (Exception e) {

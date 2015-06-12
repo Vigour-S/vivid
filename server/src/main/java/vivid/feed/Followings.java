@@ -6,6 +6,7 @@ import org.springframework.data.cassandra.mapping.Table;
 import vivid.feed.compositekey.FollowingsKey;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by xiezhuohan on 15-5-27.
@@ -21,6 +22,12 @@ public class Followings {
 
     public Followings(FollowingsKey pk, Date since) {
         this.pk = pk;
+        this.since = since;
+    }
+
+
+    public Followings(UUID userId, UUID followingId, Date since) {
+        this.pk = new FollowingsKey(userId, followingId);
         this.since = since;
     }
 

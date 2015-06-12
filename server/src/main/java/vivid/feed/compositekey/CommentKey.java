@@ -10,19 +10,19 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * Created by xiezhuohan on 15-5-27.
+ * Created by xiezhuohan on 15-6-12.
  */
 @PrimaryKeyClass
-public class TimeLineKey implements Serializable {
+public class CommentKey implements Serializable {
 
-    @PrimaryKeyColumn(name = "user_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
-    private UUID userId;
+    @PrimaryKeyColumn(name = "pin_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
+    private UUID pinId;
 
     @PrimaryKeyColumn(name = "time", ordinal = 1, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
     private Date time;
 
-    public TimeLineKey(UUID userId, Date time) {
-        this.userId = userId;
+    public CommentKey(UUID pinId, Date time) {
+        this.pinId = pinId;
         this.time = time;
     }
 
@@ -31,7 +31,7 @@ public class TimeLineKey implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((time == null) ? 0 : time.hashCode());
-        result = prime * result + ((userId == null) ? 0 : userId.hashCode());
+        result = prime * result + ((pinId == null) ? 0 : pinId.hashCode());
         return result;
     }
 
@@ -43,26 +43,26 @@ public class TimeLineKey implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        TimeLineKey other = (TimeLineKey) obj;
+        CommentKey other = (CommentKey) obj;
         if (time == null) {
             if (other.time != null)
                 return false;
         } else if (!time.equals(other.time))
             return false;
-        if (userId == null) {
-            if (other.userId != null)
+        if (pinId == null) {
+            if (other.pinId != null)
                 return false;
-        } else if (!userId.equals(other.userId))
+        } else if (!pinId.equals(other.pinId))
             return false;
         return true;
     }
 
-    public UUID getUserId() {
-        return userId;
+    public UUID getPinId() {
+        return pinId;
     }
 
-    public void setUserId(UUID userId) {
-        this.userId = userId;
+    public void setPinId(UUID pin_id) {
+        this.pinId = pin_id;
     }
 
     public Date getTime() {
