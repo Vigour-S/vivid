@@ -25,7 +25,7 @@ public class TimeLine {
         this.pinId = pinId;
     }
 
-    public TimeLine(UUID userId, Date time, UUID pinId){
+    public TimeLine(UUID userId, Date time, UUID pinId) {
         this.pk = new TimeLineKey(userId, time);
         this.pinId = pinId;
     }

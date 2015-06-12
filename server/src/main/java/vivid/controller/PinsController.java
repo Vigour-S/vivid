@@ -1,9 +1,11 @@
 package vivid.controller;
 
+
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.exceptions.DriverException;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.querybuilder.Select;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cassandra.core.RowMapper;
 import org.springframework.data.cassandra.core.CassandraOperations;
@@ -23,6 +25,7 @@ import vivid.repository.cassandra.FollowersRepository;
 import vivid.repository.cassandra.FollowingsRepository;
 import vivid.repository.cassandra.PinsRepository;
 import vivid.repository.cassandra.TimeLineRepository;
+import vivid.service.FeedService;
 
 import java.time.*;
 import java.util.Date;
@@ -48,41 +51,38 @@ public class PinsController {
     @Autowired
     private PinsRepository pinsRepository;
 
+    private FeedService feedService;
+
     @Autowired
     private TimeLineRepository timeLineRepository;
 
     @Autowired
     private CassandraOperations cassandraOperations;
 
-    static final long PEROID = 30;
+    static final long PERIOD = 30;
 
     @RequestMapping(value = "/post", method = RequestMethod.POST)
     public String postPin(@RequestParam String username, @RequestParam String description) {
+        //save post
         UUID userId = userRepository.findByUsername(username).getId();
         UUID pinId = UUID.randomUUID();
         Date date = new Date();
-        pinsRepository.save(new Pins(pinId, userId, date,description));
-        Select s = QueryBuilder.select().from("followers");
-        s.where(QueryBuilder.eq("user_id", userId));
-        List<Followers> results = cassandraOperations.query(s, new RowMapper<Followers>() {
-            @Override
-            public Followers mapRow(Row row, int rowNum) throws DriverException {
-                Followers f = new Followers(row.getUUID("user_id"), row.getUUID("follower_id"), row.getDate("since"));
-                return f;
-            }
-        });
+        pinsRepository.save(new Pins(pinId, userId, date, description));
+        //find followers
+        List<Followers> followers = feedService.findFollowersByUserId(userId);
         //push
-        for (Followers f : results) {
-            UUID tempId = f.getPk().getFollowerId();
-            Duration duration = Duration.between(ZonedDateTime.of(LocalDateTime.now(),ZoneId.of("UTC+08:00")),
+        for (Followers f : followers) {
+            UUID tempId = f.getPk().getUserId();
+            Duration duration = Duration.between(ZonedDateTime.of(LocalDateTime.now(), ZoneId.of("UTC+08:00")),
                     userRepository.findById(tempId).getLastLoginDate()
             );
-            if(duration.toDays()>-PEROID) {
+            if (duration.toDays() > -PERIOD) {
                 TimeLine timeLine = new TimeLine(new TimeLineKey(tempId, date), pinId);
                 timeLineRepository.save(timeLine);
             }
+
+            timeLineRepository.save(new TimeLine(new TimeLineKey(userId, date), pinId));
         }
-        timeLineRepository.save(new TimeLine(new TimeLineKey(userId, date), pinId));
         return null;
     }
 
@@ -114,31 +114,14 @@ public class PinsController {
                 userRepository.findById(userId).getLastLoginDate()
         );
         //pull
-        if(duration.toDays()<=-PEROID){
-            Select s = QueryBuilder.select().from("followings");
-            s.where(QueryBuilder.eq("user_id", userId));
-            List<Followings> results = cassandraOperations.query(s, new RowMapper<Followings>() {
-                @Override
-                public Followings mapRow(Row row, int rowNum) throws DriverException {
-                    Followings f = new Followings(row.getUUID("user_id"), row.getUUID("following_id"), row.getDate("since"));
-                    return f;
-                }
-            });
-            for (Followings f : results) {
-                UUID tempId = f.getPk().getFollowingId();
-                //TODO:
+        if(duration.toDays()<=-PERIOD){
+            List<Followings> followings = feedService.findFollowingsByUserId(userId);
+            for (Followings f : followings) {
+                UUID tempId = f.getPk().getUserId();
+                //TODO：find pins to pull
             }
         }
-        Select s = QueryBuilder.select().from("timeline");
-        s.where(QueryBuilder.eq("user_id", userId));
-        List<TimeLine> results = cassandraOperations.query(s, new RowMapper<TimeLine>() {
-            @Override
-            public TimeLine mapRow(Row row, int rowNum) throws DriverException {
-                TimeLine timeLine = new TimeLine(row.getUUID("user_id"), row.getDate("time"), row.getUUID("pin_id"));
-                return timeLine;
-            }
-        });
-
+        feedService.findTimelineByUserId(userId);
         return null;
     }
 

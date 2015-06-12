@@ -25,8 +25,9 @@ public class Followings {
         this.since = since;
     }
 
-    public Followings(UUID userId, UUID followerId, Date since) {
-        this.pk = new FollowingsKey(userId, followerId);
+
+    public Followings(UUID userId, UUID followingId, Date since) {
+        this.pk = new FollowingsKey(userId, followingId);
         this.since = since;
     }
 
