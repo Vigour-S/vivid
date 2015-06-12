@@ -4,6 +4,7 @@ import org.springframework.data.cassandra.mapping.Column;
 import org.springframework.data.cassandra.mapping.PrimaryKey;
 import org.springframework.data.cassandra.mapping.Table;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -12,18 +13,22 @@ import java.util.UUID;
 @Table(value = "pins")
 public class Pins {
 
-    @PrimaryKey(value = "pin_id")
-    private UUID pinId;
-
-    @Column(value = "user_id")
+    @PrimaryKey(value = "user_id")
     private UUID userId;
+
+    @Column(value = "pin_id")
+    private UUID pinId;
 
     @Column(value = "body")
     private String body;
 
-    public Pins(UUID pinId, UUID userId, String body) {
+    @Column(value = "time")
+    private Date time;
+
+    public Pins(UUID userId, UUID pinId, Date time, String body) {
         this.pinId = pinId;
         this.userId = userId;
+        this.time = time;
         this.body = body;
     }
 
@@ -35,8 +40,13 @@ public class Pins {
         return userId;
     }
 
+    public Date getTime() {
+        return time;
+    }
+
     public String getBody() {
         return body;
     }
+
 
 }

@@ -1,24 +1,29 @@
 package vivid.controller;
 
-import com.datastax.driver.core.Row;
-import com.datastax.driver.core.exceptions.DriverException;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cassandra.core.RowMapper;
-import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import vivid.feed.Followers;
 import vivid.feed.Followings;
+import vivid.feed.Pins;
+import vivid.feed.TimeLine;
 import vivid.feed.compositekey.FollowersKey;
 import vivid.feed.compositekey.FollowingsKey;
+import vivid.feed.compositekey.TimeLineKey;
 import vivid.repository.UserRepository;
 import vivid.repository.cassandra.FollowersRepository;
 import vivid.repository.cassandra.FollowingsRepository;
 import vivid.repository.cassandra.PinsRepository;
 import vivid.repository.cassandra.TimeLineRepository;
+import vivid.service.FeedService;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -43,39 +48,35 @@ public class PinsController {
     private PinsRepository pinsRepository;
 
     @Autowired
-    private TimeLineRepository timeLineRepository;
+    private FeedService feedService;
 
     @Autowired
-    private CassandraOperations cassandraOperations;
+    private TimeLineRepository timeLineRepository;
+
+    static final long PERIOD = 30;
 
     @RequestMapping(value = "/post", method = RequestMethod.POST)
-    public String postPin(@RequestParam String username) {
-//        UUID userId = userRepository.findByUsername(username).getId();
-//        pinsRepository.save(new Pins(pinId, userId, description));
-//        Date date = new Date();
-//        //TODO: 拉取
-//        List<Followers> followerses = followersRepository.findByUserId(userId);
-//        for( Followers followers : followerses){
-//            UUID tempId = followers.getPk().getUserId();
-//            TimeLine timeLine = new TimeLine(new TimeLineKey(tempId, date), pinId);
-//            timeLineRepository.save(timeLine);
-//        }
+    public String postPin(@RequestParam String username, @RequestParam String description) {
+        //save post
         UUID userId = userRepository.findByUsername(username).getId();
-        //String cql = "select * from followers where user_id = bfd2c7d4-8cf4-4933-88e7-f2792d075540";
-        //List<Followers> followerses = followersRepository.findByUserId(userId);
-        // Select s = QueryBuilder.select().from("followers");
-        //s.where(QueryBuilder.eq("user_id", userId));
-        //List<Followers> followerses = cassandraOperations.queryForList(cql, Followers.class);
-        String cqlAll = "select * from followers";
-        List<Followers> results = cassandraOperations.query(cqlAll, new RowMapper<Followers>() {
-            @Override
-            public Followers mapRow(Row row, int rowNum) throws DriverException {
-                Followers f = new Followers(row.getUUID("user_id"), row.getUUID("follower_id"), row.getDate("since"));
-                return f;
+        UUID pinId = UUID.randomUUID();
+        Date date = new Date();
+        pinsRepository.save(new Pins(userId, pinId, date, description));
+        //find followers
+        List<Followers> followers = feedService.findFollowersByUserId(userId);
+        //push
+        for (Followers f : followers) {
+            UUID tempId = f.getPk().getFollowerId();
+            Duration duration = Duration.between(
+                    userRepository.findById(tempId).getLastLoginDate(),
+                    ZonedDateTime.of(LocalDateTime.now(), ZoneId.of("UTC+08:00"))
+            );
+            if (duration.toDays() < PERIOD) {
+                TimeLine timeLine = new TimeLine(new TimeLineKey(tempId, date), pinId);
+                timeLineRepository.save(timeLine);
             }
-        });
-        for (Followers f : results) {
-            System.out.println(f.getPk().getUserId());
+
+            timeLineRepository.save(new TimeLine(new TimeLineKey(userId, date), pinId));
         }
         return null;
     }
@@ -101,13 +102,31 @@ public class PinsController {
         return null;
     }
 
+    @RequestMapping(value = "/timeLine", method = RequestMethod.POST)
     public String showTimeLine(@RequestParam String username) {
-//        List<Pins> pinses;
-//        timeLineRepository.findByUserId(userRepository.findByUsername(username).getId());
-        Iterable<Followers> followerses = followersRepository.findAll();
-        for (Followers followers : followerses) {
-            System.out.println(followers.getPk().getUserId());
+        UUID userId = userRepository.findByUsername(username).getId();
+        Duration duration = Duration.between(
+                userRepository.findById(userId).getLastLoginDate(),
+                ZonedDateTime.of(LocalDateTime.now(), ZoneId.of("UTC+08:00"))
+        );
+        //pull
+        if (duration.toDays() >= PERIOD) {
+            List<Followings> followings = feedService.findFollowingsByUserId(userId);
+            for (Followings f : followings) {
+                UUID tempId = f.getPk().getFollowingId();
+                List<Pins> pins = feedService.findPinsByUserId(tempId);
+                for (Pins p : pins) {
+                    Duration d = Duration.between(userRepository.findById(userId).getLastLoginDate(),
+                            ZonedDateTime.of(LocalDateTime.ofInstant(p.getTime().toInstant(),
+                                            ZoneId.systemDefault()), ZoneId.of("UTC+08:00")
+                            )
+                    );
+                    if (d.toDays() >= PERIOD)
+                        timeLineRepository.save(new TimeLine(userId, p.getTime(), p.getPinId()));
+                }
+            }
         }
+        List<TimeLine> timeLines = feedService.findTimelineByUserId(userId);
         return null;
     }
 
