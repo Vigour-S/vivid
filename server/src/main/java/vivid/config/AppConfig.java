@@ -15,7 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Configuration
 @ComponentScan(basePackages = {"vivid"},
         excludeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern = {"vivid.controller.*"}))
-@PropertySource(value = {"classpath:application.properties"})
+@PropertySource(value = {"classpath:application.yml"})
 @EnableScheduling
 @EnableAspectJAutoProxy
 @EnableCaching

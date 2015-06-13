@@ -20,8 +20,8 @@ task npmInstall(type:Exec) {
     logging.captureStandardOutput LogLevel.INFO     // be Gradle-like, reduce noisy logging
     logging.captureStandardError LogLevel.LIFECYCLE // but do show downloads in the log
 
-    inputs.files "package.json", "bower.json"
-    outputs.files "node_modules", "vendor"
+    inputs.files "package.json"
+    outputs.files "node_modules", "src/lib"
 
     if(Os.isFamily(Os.FAMILY_WINDOWS)) {
         commandLine 'cmd', '/c', 'npm', 'install'
