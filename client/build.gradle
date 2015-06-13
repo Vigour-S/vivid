@@ -34,7 +34,7 @@ task npmInstall(type:Exec) {
 task npmBuild(type:Exec, dependsOn: npmInstall) {
 
     logging.captureStandardOutput LogLevel.INFO
-    logging.captureStandardError LogLevel.INFO
+    logging.captureStandardError LogLevel.LIFECYCLE
 
     inputs.dir "src"
     inputs.file "gulpfile.js"
