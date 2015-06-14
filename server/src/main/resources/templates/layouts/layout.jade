@@ -1,16 +1,18 @@
 !!! 5
 html
-    head
-        include head
-        block head
-    body
-        include main_navbar
+  head
+    include head
+    block head
+  body
+    include main_navbar
+    .container
+      .page-header
+        .clearfix
+          block page_title
+      br
+      .clearfix
         .container
-            .page-header
-                .clearfix
-                    block page_title
-            br
-            .clearfix
-                .container
-                    block body
-        include footer
+          block body
+    include footer
+    #modal
+    #dock

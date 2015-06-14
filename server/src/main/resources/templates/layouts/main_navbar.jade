@@ -10,9 +10,16 @@
     #main_navbar_items.navbar-collapse.collapse
       form.navbar-form.navbar-left(role="search")
         .form-group
-          input.form-control(type="text")
+          .input-group
+            input.form-control(type="text")
+            span.input-group-btn
+              button.btn.btn-default(type="button") Go
       ul.nav.navbar-nav.navbar-right
-        li
-          a(href='/signup') Sign up
-        li
-          a(href='/login') Login
+        if currentUser
+          li
+            a(href='/profile')= currentUser
+        else
+          li
+            a(href='/signup') Sign up
+          li
+            a(href='/login') Login
