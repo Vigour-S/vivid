@@ -13,7 +13,7 @@ var paths = {
     sass: ['src/sass/*'],
     assets: ["src/cache.manifest"],
     images: ["src/img/*"],
-    public: ['public/*'],
+    public: ['public/*', 'src/lib/npm/font-awesome@4.3.0/fonts/*'],
     destination: './dist'
 };
 
