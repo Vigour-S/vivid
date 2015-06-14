@@ -46,11 +46,6 @@ public class SessionsController {
         return "sessions/new";
     }
 
-    @RequestMapping(value = "/signup", method = RequestMethod.GET)
-    public String signup() {
-        return "users/new";
-    }
-
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logout() {
         SecurityUtils.getSubject().logout();
@@ -69,18 +64,5 @@ public class SessionsController {
         return "redirect:/";
     }
 
-    @Transactional
-    @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public String register(@RequestParam String email, @RequestParam String username, @RequestParam String password, @RequestParam String confirm) {
-        if (!password.equals(confirm)) {
-            throw new IllegalArgumentException("the two passwords are not match");
-        }
-        User user = new User(username, passwordService.encryptPassword(password), email);
-        user.getRoles().add(roleRepository.findByName("USER"));
-        userRepository.save(user);
-        return "redirect:/";
-        // auto login
-        //authenticate(username, password, false);
-    }
 
 }

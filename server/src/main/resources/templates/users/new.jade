@@ -1,18 +1,29 @@
 extends ../layouts/layout
 
 block body
-  h1 Sign up
-    div
-      form(name='f', action='/signup', method='post')
-        fieldset
-          legend Sign Up
-          label(for='email') Email
-          input#username(type='text', name='email')
-          label(for='username') Username
-          input#username(type='text', name='username')
-          label(for='password') Password
-          input#password(type='password', name='password')
-          label(for='confirm') Conform Password
-          input#password(type='password', name='confirm')
-          .form-actions
-            button.btn(type='submit') Sign up
+  .row
+    .col-md-offset-3.col-md-6
+      .panel.panel-info
+        .panel-heading
+          span.title Sign up
+        .panel-body
+          form.form-horizontal(action='/signup', method='post')
+            .form-group
+              label.control-label.col-md-3(for='email') Email
+              .col-md-9
+                input#username.form-control(type='text', name='email')
+            .form-group
+              label.control-label.col-md-3(for='username') Username
+              .col-md-9
+                input#username.form-control(type='text', name='username')
+            .form-group
+              label.control-label.col-md-3(for='password') Password
+              .col-md-9
+                input#password.form-control(type='password', name='password')
+            .form-group
+              label.control-label.col-md-3(for='confirm') Confirm
+              .col-md-9
+                input#password.form-control(type='password', name='confirm')
+            .form-actions.form-group
+              .col-md-offset-3.col-md-10
+                button.btn.btn-default(type='submit') Sign up
