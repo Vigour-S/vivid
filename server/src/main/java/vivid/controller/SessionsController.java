@@ -1,5 +1,6 @@
 package vivid.controller;
 
+import de.neuland.jade4j.JadeConfiguration;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import vivid.entity.User;
 import vivid.repository.RoleRepository;
 import vivid.repository.UserRepository;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by fantasticfears on 15-5-21.
@@ -60,9 +64,11 @@ public class SessionsController {
         final Subject subject = SecurityUtils.getSubject();
         subject.login(credentials);
         // set attribute that will allow session querying
-        subject.getSession().setAttribute("email", credentials.getUsername());
+        JadeConfiguration config = new JadeConfiguration();
+        Map<String, Object> defaults = new HashMap<String, Object>();
+        defaults.put("currentUser", credentials);
+        config.setSharedVariables(defaults);
         return "redirect:/";
     }
-
 
 }
