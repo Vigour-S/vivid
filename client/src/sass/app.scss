@@ -1,2 +1,9 @@
 @import "variables";
 @import "bootstrap";
+
+.navbar-brand {
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}

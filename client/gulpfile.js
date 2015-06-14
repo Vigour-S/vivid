@@ -13,6 +13,7 @@ var paths = {
     sass: ['src/sass/*'],
     assets: ["src/cache.manifest"],
     images: ["src/img/*"],
+    public: ['public/*'],
     destination: './dist'
 };
 
@@ -60,5 +61,11 @@ gulp.task('sass', function () {
         .pipe(gulp.dest(paths.destination + '/css'));
 });
 
+gulp.task('copy-public', function () {
+    return gulp.src(paths.public)
+        .pipe(gulp.dest(paths.destination + '/public'));
+});
+
+
 gulp.task('build', ['optimize-and-copy-css', 'optimize-and-copy-js', 'copy-lib',
-    'copy-images', 'sass', 'copy-assets'], function(){});
+    'copy-images', 'sass', 'copy-assets', 'copy-public'], function(){});
