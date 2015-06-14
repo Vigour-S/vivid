@@ -63,11 +63,6 @@ public class SessionsController {
         log.info("Authenticating {}", credentials.getUsername());
         final Subject subject = SecurityUtils.getSubject();
         subject.login(credentials);
-        // set attribute that will allow session querying
-        JadeConfiguration config = new JadeConfiguration();
-        Map<String, Object> defaults = new HashMap<String, Object>();
-        defaults.put("currentUser", credentials);
-        config.setSharedVariables(defaults);
         return "redirect:/";
     }
 
