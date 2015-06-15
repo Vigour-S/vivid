@@ -15,9 +15,9 @@
             span.input-group-btn
               button.btn.btn-default(type="button") Go
       ul.nav.navbar-nav.navbar-right
-        if currentUser
+        if currentUser.now
           li
-            a(href='/profile')= currentUser
+            a(href='/profile')= currentUser.username
         else
           li
             a(href='/signup') Sign up

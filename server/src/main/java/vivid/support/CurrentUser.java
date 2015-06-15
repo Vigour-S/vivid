@@ -7,13 +7,13 @@ import vivid.service.UserService;
 /**
  * Created by wujy on 15-6-14.
  */
-@JadeHelper
-public class Util {
+@JadeHelper("currentUser")
+public class CurrentUser {
 
     @Autowired
     private UserService userService;
 
-    public Object getCurrentUser() {
+    public Object now() {
         return userService.getCurrentUser();
     }
 
