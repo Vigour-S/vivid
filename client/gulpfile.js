@@ -1,8 +1,7 @@
 var path = require('path'),
     cssMinify = require('gulp-minify-css'),
     sass = require('gulp-sass'),
-    gulp = require('gulp'),
-    Builder = require('systemjs-builder');
+    gulp = require('gulp');
 
 var paths = {
     baseUrl: 'file:' + process.cwd() + '/src/',
@@ -10,10 +9,12 @@ var paths = {
     css: {
         files: ['src/css/*.css']
     },
+    js: 'src/app/*',
     sass: ['src/sass/*'],
     assets: ["src/cache.manifest"],
     images: ["src/img/*"],
-    public: ['public/*', 'src/lib/npm/font-awesome@4.3.0/fonts/*'],
+    public: ['public/*', 'src/lib/font-awesome-sass/assets/fonts/font-awesome/*'],
+    rootAssets: ['src/config.js', 'src/robots.txt'],
     destination: './dist'
 };
 
@@ -26,16 +27,8 @@ gulp.task('optimize-and-copy-css', function() {
 
 // Optimize application JavaScript files and copy to "dist" folder
 gulp.task('optimize-and-copy-js', function(cb) {
-    var builder = new Builder();
-    builder.loadConfig('./src/config.js')
-        .then(function() {
-            builder.config({ baseURL: paths.baseUrl });
-            builder.build('app/app', paths.destination + '/app/app.js', { minify: true, sourceMaps: true });
-            cb();
-        })
-        .catch(function(err) {
-            cb(err);
-        });
+    return gulp.src(paths.js)
+        .pipe(gulp.dest(paths.destination + '/app'));
 });
 
 // Copy jspm-managed JavaScript dependencies to "dist" folder
@@ -65,7 +58,11 @@ gulp.task('copy-public', function () {
     return gulp.src(paths.public)
         .pipe(gulp.dest(paths.destination + '/public'));
 });
+gulp.task('copy-root-assets', function () {
+    return gulp.src(paths.rootAssets)
+        .pipe(gulp.dest(paths.destination));
+});
 
 
 gulp.task('build', ['optimize-and-copy-css', 'optimize-and-copy-js', 'copy-lib',
-    'copy-images', 'sass', 'copy-assets', 'copy-public'], function(){});
+    'copy-images', 'sass', 'copy-assets', 'copy-public', 'copy-root-assets'], function(){});
