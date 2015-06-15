@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import vivid.entity.Permission;
 import vivid.entity.Role;
@@ -74,7 +73,7 @@ public class UsersController {
         final Role roleAdmin = new Role();
         roleAdmin.setName("ADMIN");
         roleAdmin.getPermissions().add(p1);
-//        roleAdmin.getPermissions().add(p2);
+        roleAdmin.getPermissions().add(p2);
         roleRepository.save(roleAdmin);
         final Role roleUser = new Role();
         roleUser.setName("USER");
@@ -94,32 +93,14 @@ public class UsersController {
         userUser1.setPassword(passwordService.encryptPassword("123456"));
         userUser1.getRoles().add(roleUser);
         userRepository.save(userUser1);
-//        final User userUser2 = new User();
-//        userUser2.setEmail("jasonxzh818@gmail.com");
-//        userUser2.setUsername("Jason Xie");
-//        userUser2.setPassword(passwordService.encryptPassword("123456"));
-//        userUser2.getRoles().add(roleUser);
-//        userRepository.save(userUser2);
+        final User userUser2 = new User();
+        userUser2.setEmail("jasonxzh818@gmail.com");
+        userUser2.setUsername("Jason Xie");
+        userUser2.setPassword(passwordService.encryptPassword("123456"));
+        userUser2.getRoles().add(roleUser);
+        userRepository.save(userUser2);
 
         log.info("Scenario initiated.");
     }
 
-    @RequestMapping(value = "/signup", method = RequestMethod.GET)
-    public String signup() {
-        return "users/new";
-    }
-
-    @Transactional
-    @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public String register(@RequestParam String email, @RequestParam String username, @RequestParam String password, @RequestParam String confirm) {
-        if (!password.equals(confirm)) {
-            throw new IllegalArgumentException("the two passwords are not match");
-        }
-        User user = new User(username, passwordService.encryptPassword(password), email);
-        user.getRoles().add(roleRepository.findByName("USER"));
-        userRepository.save(user);
-        return "redirect:/";
-        // auto login
-        //authenticate(username, password, false);
-    }
 }

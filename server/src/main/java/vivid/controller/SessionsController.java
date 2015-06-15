@@ -1,6 +1,5 @@
 package vivid.controller;
 
-import de.neuland.jade4j.JadeConfiguration;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
@@ -14,12 +13,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vivid.entity.User;
 import vivid.repository.RoleRepository;
 import vivid.repository.UserRepository;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by fantasticfears on 15-5-21.
@@ -63,6 +60,30 @@ public class SessionsController {
         log.info("Authenticating {}", credentials.getUsername());
         final Subject subject = SecurityUtils.getSubject();
         subject.login(credentials);
+        return "redirect:/";
+    }
+
+    @RequestMapping(value = "/signup", method = RequestMethod.GET)
+    public String signup() {
+        return "users/new";
+    }
+
+    @Transactional
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    public String register(@RequestParam String email, @RequestParam String username, @RequestParam String password, @RequestParam String confirm, RedirectAttributes redirectAttributes) {
+        if (!password.equals(confirm)) {
+            redirectAttributes.addFlashAttribute("confirm_error", "The two passwords are not match.");
+            return "redirect:/signup";
+        }
+        try {
+            User user = new User(username, passwordService.encryptPassword(password), email);
+            user.getRoles().add(roleRepository.findByName("USER"));
+            userRepository.save(user);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/signup";
+        }
+        redirectAttributes.addFlashAttribute("message", "Sign up successfully.");
         return "redirect:/";
     }
 
