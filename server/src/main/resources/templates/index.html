@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 
 <head>
-    <title>thymeleaf-extras-shiro</title>
+    <th:replace
 </head>
 
 <body>
@@ -13,3 +13,10 @@
 </body>
 
 </html>
+
+extends ./layouts/layout
+block page_title
+.col-md-12.col-sm-6.col-xs-12
+<h1>Vision Explorer</h1>
+<small>Vivid</small>
+block body
