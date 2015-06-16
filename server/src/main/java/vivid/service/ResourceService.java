@@ -32,8 +32,7 @@ public class ResourceService {
         return sb.toString();
     }
 
-    public void saveFile(byte[] bytes, UUID id, String originalFilename) throws IOException {
-        // store the bytes to file
+    public String getFilePath(UUID id, String originalFilename) {
         String[] strs = id.toString().split("-");
         String filename = "uploads";
         for (String str : strs) {
@@ -41,9 +40,14 @@ public class ResourceService {
         }
         new File(filename).mkdirs();  // create directories recursively
         filename += "/" + originalFilename;
+        return filename;
+    }
+
+    public void saveFile(byte[] bytes, UUID id, String originalFilename) throws IOException {
+        // store the bytes to file
         // File digest format: `{Digest1}-{Digest2}-{Digest3}-{Digest4}`
         // Save file to: `uploads/{Digest1}/{Digest2}/{Digest3}/{Digest4}/{OriginalFilename}`
-        Files.write(FileSystems.getDefault().getPath(filename), bytes, StandardOpenOption.CREATE);
+        Files.write(FileSystems.getDefault().getPath(getFilePath(id, originalFilename)), bytes, StandardOpenOption.CREATE);
     }
 
 }
