@@ -56,7 +56,8 @@ public class FeedsController {
     }
 
     @RequestMapping(value = "/follow", method = RequestMethod.POST)
-    public void follow(@RequestParam String username, @RequestParam String usernameToFollow) {
+    public void follow(@RequestParam String usernameToFollow) {
+        String username = (String) SecurityUtils.getSubject().getPrincipal();
         UUID userId = userRepository.findByUsername(username).getId();
         UUID userIdToFollow = userRepository.findByUsername(usernameToFollow).getId();
         Date since = new Date();
@@ -67,7 +68,8 @@ public class FeedsController {
     }
 
     @RequestMapping(value = "/un_follow", method = RequestMethod.POST)
-    public void unFollow(@RequestParam String username, @RequestParam String usernameToFollow) {
+    public void unFollow(@RequestParam String usernameToFollow) {
+        String username = (String) SecurityUtils.getSubject().getPrincipal();
         UUID userId = userRepository.findByUsername(username).getId();
         UUID userIdToFollow = userRepository.findByUsername(usernameToFollow).getId();
         followersRepository.delete(new FollowersKey(userIdToFollow, userId));
