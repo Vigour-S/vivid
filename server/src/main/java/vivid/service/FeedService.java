@@ -144,7 +144,7 @@ public class FeedService {
 
         //pull
         if (duration.toDays() >= PERIOD) {
-            //find followers
+            //find followings
             List<Followings> followings = findFollowingsByUserId(userId);
             for (Followings f : followings) {
                 UUID tempId = f.getPk().getFollowingId();
@@ -162,5 +162,4 @@ public class FeedService {
         }
         return findTimeLineByUserIdAndTimeAndCount(userId, lastUpdatedTill, count);
     }
-
 }

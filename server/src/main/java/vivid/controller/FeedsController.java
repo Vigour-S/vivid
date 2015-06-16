@@ -12,11 +12,9 @@ import vivid.entity.User;
 import vivid.feed.*;
 import vivid.feed.compositekey.FollowersKey;
 import vivid.feed.compositekey.FollowingsKey;
+import vivid.feed.compositekey.TimeLineKey;
 import vivid.repository.UserRepository;
-import vivid.repository.cassandra.CommentRepository;
-import vivid.repository.cassandra.FollowersRepository;
-import vivid.repository.cassandra.FollowingsRepository;
-import vivid.repository.cassandra.PinsRepository;
+import vivid.repository.cassandra.*;
 import vivid.service.FeedService;
 
 import java.util.*;
@@ -45,6 +43,9 @@ public class FeedsController {
     @Autowired
     private CommentRepository commentRepository;
 
+    @Autowired
+    private TimeLineRepository timeLineRepository;
+
     @RequestMapping(value = "/post", method = RequestMethod.POST)
     public void postPin(@RequestParam String username, @RequestParam String description) {
         feedService.saveResourcePin(username, description);
@@ -59,12 +60,17 @@ public class FeedsController {
         followersRepository.save(followers);
         Followings followings = new Followings(new FollowingsKey(userId, userIdToFollow), since);
         followingsRepository.save(followings);
+        //pull
+        List<Pins> pins = feedService.findPinsByUserId(userIdToFollow);
+        for (Pins p : pins) {
+            timeLineRepository.save(new TimeLine(new TimeLineKey(userIdToFollow, p.getTime()), p.getPk().getPinId()));
+        }
     }
 
     @RequestMapping(value = "/un_follow", method = RequestMethod.POST)
-    public void unFollow(@RequestParam String username, @RequestParam String usernameToFollow) {
+    public void unFollow(@RequestParam String username, @RequestParam String usernameToUnFollow) {
         UUID userId = userRepository.findByUsername(username).getId();
-        UUID userIdToFollow = userRepository.findByUsername(usernameToFollow).getId();
+        UUID userIdToFollow = userRepository.findByUsername(usernameToUnFollow).getId();
         followersRepository.delete(new FollowersKey(userIdToFollow, userId));
         followingsRepository.delete(new FollowingsKey(userId, userIdToFollow));
     }
