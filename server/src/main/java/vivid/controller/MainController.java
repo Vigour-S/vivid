@@ -59,7 +59,7 @@ public class MainController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String authenticate(@RequestParam String username, @RequestParam String password, @RequestParam(defaultValue = "false") Boolean rememberMe) {
+    public String authenticate(@RequestParam String username, @RequestParam String password, @RequestParam(defaultValue = "true") Boolean rememberMe) {
         UsernamePasswordToken credentials = new UsernamePasswordToken(username, password);
         credentials.setRememberMe(rememberMe);
         log.info("Authenticating {}", credentials.getUsername());

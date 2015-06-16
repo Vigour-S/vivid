@@ -39,11 +39,11 @@
                 <a th:href="@{/login}">Login</a>
               </li>
             </shiro:guest>
-            <shiro:authenticated>
+            <shiro:user>
               <li>
                 <a th:href="@{/profile}"><shiro:principal/></a>
               </li>
-            </shiro:authenticated>
+            </shiro:user>
           </ul>
         </div>
       </div>
