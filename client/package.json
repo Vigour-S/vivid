@@ -17,7 +17,7 @@
     "test": "test"
   },
   "scripts": {
-    "prepublish": "bower install",
+    "prepublish": "bower install --config.interactive=false",
     "build": "gulp build"
   },
   "engines": {
