@@ -115,7 +115,7 @@ public class UsersController {
     public String picture(@PathVariable String username, Model model) {
         User user = userRepository.findByUsername(username);
         model.addAttribute("user", user);
-        return "users/profile";
+        return "users/detail";
     }
 
 

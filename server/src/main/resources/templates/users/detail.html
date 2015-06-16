@@ -24,6 +24,7 @@
                                 Username: <label th:text="${user.username}"></label>
                                 Email: <label th:text="${user.email}"></label>
                             </div>
+                            <img th:src="@{${user.avatar}}"/>
                             <button th:href="@{/follow?usernameToFollow=${user.username}}">Follow</button>
                             <button th:href="@{/un_follow?usernameToUnFollow=${user.username}}">UnFollow</button>
                         </div>
