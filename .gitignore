@@ -18,4 +18,4 @@ log
 .gradle
 .DS_Store
 
-service/uploads/
+server/uploads/
