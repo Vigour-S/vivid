@@ -5,34 +5,25 @@
 <body>
 <div th:include="layouts/layout :: navbarFragment">
 </div>
-<div class="container">
-    <div class="page-header">
-        <div class="clearfix">
+<div id="main">
+  <div class="user-detail">
+    <div class="user-meta">
+      <div class="container">
+        <div class="user-info">
+          <div class="user-avatar">
+            <img th:src="@{${user.avatar}}"></img>
+          </div>
+          <div class="user-info-detail">
+            <span class="user-username" th:text="${user.username}"></span>
+            <span class="user-email" th:text="${user.email}"></span>
+          </div>
         </div>
+        <button th:href="@{/follow?usernameToFollow=${user.username}}">Follow</button>
+        <button th:href="@{/un_follow?usernameToUnFollow=${user.username}}">UnFollow</button>
+      </div>
     </div>
-    <br/>
-    <div class="clearfix">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-offset-3 col-md-6">
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            <span class="title"><shiro:principal/>'s Profile</span>
-                        </div>
-                        <div class="panel-body">
-                            <div>
-                                Username: <label th:text="${user.username}"></label>
-                                Email: <label th:text="${user.email}"></label>
-                            </div>
-                            <img th:src="@{${user.avatar}}"/>
-                            <button th:href="@{/follow?usernameToFollow=${user.username}}">Follow</button>
-                            <button th:href="@{/un_follow?usernameToUnFollow=${user.username}}">UnFollow</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div id="timeline" class="user-timeline"></div>
+  </div>
 </div>
 <div th:include="layouts/layout :: footerFragment">
 </div>
