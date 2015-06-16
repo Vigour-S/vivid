@@ -22,4 +22,37 @@ $(function () {
       }
     });
   });
+
+  var $container = $('#timeline');
+  $.ajax({
+    url: '/timeline?last_update_till=' + new Date().toISOString() + '&count=30',
+    method: 'GET',
+    dataType: 'json'
+  }).done(function(data) {
+    console.log(data);
+  });
+
+  $container.imagesLoaded(function(){
+    $container.masonry({
+      // selector for entry content
+      itemSelector: '.post-card',
+      columnWidth: 250
+    });
+  });
+
+  $container.infinitescroll({
+    navSelector  : ".navigation",
+    // selector for the NEXT link (to page 2)
+    nextSelector : ".nav-previous a",
+    // selector for all items you'll retrieve
+    itemSelector : ".post-card",
+    loading: {
+      finishedMsg: 'No more pages to load.'
+    }
+  }, function(newElements) {
+    var $newElems = $(newElements);
+    $container.imagesLoaded(function() {
+      $container.masonry('appended', $newElems);
+    });
+  });
 });
