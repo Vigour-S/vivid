@@ -105,6 +105,9 @@ public class User extends BaseEntity {
     }
 
     public String getAvatar() {
+        if (avatar == null) {
+            avatar = "/public/default-avatar.png";
+        }
         return avatar;
     }
 
