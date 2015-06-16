@@ -75,7 +75,6 @@ public class FeedsController {
     Map showTimeLine(@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ") @RequestParam("last_updated_till") Date lastUpdatedTill, @RequestParam int count) {
         String username = (String) SecurityUtils.getSubject().getPrincipal();
         List<TimeLine> timeLines = feedService.findTimeLineByUsernameAndTimeAndCount(username, lastUpdatedTill, count);
-        //List<TimeLine> timeLines = feedService.findTimeLineByUsername(username);
         List<Post> result = new LinkedList<Post>();
         for (TimeLine timeLine : timeLines) {
             User user = userRepository.findById(timeLine.getPk().getUserId());
@@ -84,8 +83,8 @@ public class FeedsController {
             post.setUsername(user.getUsername());
             post.setAvatar(user.getAvatar());
             post.setTimestamp(timeLine.getPk().getTime());
-            post.setUrl(pins.getBody());
-            post.setTitle("");  // TODO:
+            post.setUrl("/detail/" + pins.getPinId());
+            post.setTitle(null);  // TODO:
             post.setDescription(pins.getBody());
             post.setIsVideo(false);  // TODO:
             result.add(post);
