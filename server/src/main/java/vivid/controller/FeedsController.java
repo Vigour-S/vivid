@@ -1,13 +1,11 @@
 package vivid.controller;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import vivid.entity.Resource;
 import vivid.entity.User;
 import vivid.feed.*;
 import vivid.feed.compositekey.FollowersKey;
@@ -19,11 +17,7 @@ import vivid.repository.cassandra.FollowingsRepository;
 import vivid.repository.cassandra.PinsRepository;
 import vivid.service.FeedService;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -56,7 +50,7 @@ public class FeedsController {
     }
 
     @RequestMapping(value = "/follow", method = RequestMethod.POST)
-    public void follow(@RequestParam String usernameToFollow) {
+    public String follow(@RequestParam String usernameToFollow, HttpServletRequest request) {
         String username = (String) SecurityUtils.getSubject().getPrincipal();
         UUID userId = userRepository.findByUsername(username).getId();
         UUID userIdToFollow = userRepository.findByUsername(usernameToFollow).getId();
@@ -65,21 +59,23 @@ public class FeedsController {
         followersRepository.save(followers);
         Followings followings = new Followings(new FollowingsKey(userId, userIdToFollow), since);
         followingsRepository.save(followings);
+        return "redirect:" + request.getHeader("Referer");
     }
 
     @RequestMapping(value = "/un_follow", method = RequestMethod.POST)
-    public void unFollow(@RequestParam String usernameToUnFollow) {
+    public String unFollow(@RequestParam String usernameToUnFollow, HttpServletRequest request) {
         String username = (String) SecurityUtils.getSubject().getPrincipal();
         UUID userId = userRepository.findByUsername(username).getId();
         UUID userIdToFollow = userRepository.findByUsername(usernameToUnFollow).getId();
         followersRepository.delete(new FollowersKey(userIdToFollow, userId));
         followingsRepository.delete(new FollowingsKey(userId, userIdToFollow));
+        return "redirect:" + request.getHeader("Referer");
     }
 
     @RequestMapping(value = "/timeline", method = RequestMethod.GET)
     public
     @ResponseBody
-    Map showTimeLine(@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ") @RequestParam("last_updated_till") Date lastUpdatedTill, @RequestParam int count) {
+    Map showTimeLine(@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ") @RequestParam("last_updated_till") Date lastUpdatedTill, @RequestParam int count) {
         String username = (String) SecurityUtils.getSubject().getPrincipal();
         List<TimeLine> timeLines = feedService.findTimeLineByUsernameAndTimeAndCount(username, lastUpdatedTill, count);
         List<Post> result = new LinkedList<Post>();

@@ -2,29 +2,27 @@ package vivid.controller;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import vivid.entity.Permission;
-import vivid.entity.Resource;
 import vivid.entity.Role;
 import vivid.entity.User;
 import vivid.feed.Followings;
 import vivid.repository.PermissionRepository;
-import vivid.repository.ResourceRepository;
 import vivid.repository.RoleRepository;
 import vivid.repository.UserRepository;
 import vivid.service.FeedService;
-import vivid.service.ResourceService;
 
-import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by wujy on 15-6-3.
@@ -50,13 +48,17 @@ public class UsersController {
     private PermissionRepository permissionRepository;
 
     @RequestMapping(value = "users", method = RequestMethod.GET)
-    public @ResponseBody List<User> getAll() {
+    public
+    @ResponseBody
+    List<User> getAll() {
         SecurityUtils.getSubject().checkRole("ADMIN");
         return userRepository.findAll();
     }
 
     @RequestMapping(value = "users/do_something", method = RequestMethod.GET)
-    public @ResponseBody List<User> dontHavePermission() {
+    public
+    @ResponseBody
+    List<User> dontHavePermission() {
         SecurityUtils.getSubject().checkPermission("DO_SOMETHING");
         return userRepository.findAll();
     }
