@@ -38,6 +38,9 @@ public class User extends BaseEntity {
     @Column(name = "nickname")
     private String nickname;
 
+    @Column(name = "avatar")
+    private String avatar;
+
     @Column(name = "last_login_date")
     private ZonedDateTime lastLoginDate;
 
@@ -101,12 +104,20 @@ public class User extends BaseEntity {
         this.nickname = nickname;
     }
 
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     public ZonedDateTime getLastLoginDate() {
         return lastLoginDate;
     }
 
-    public void setLastVisitedDate(ZonedDateTime lastVisitedDate) {
-        this.lastLoginDate = lastVisitedDate;
+    public void setLastLoginDate(ZonedDateTime lastLoginDate) {
+        this.lastLoginDate = lastLoginDate;
     }
 
     public List<Role> getRoles() {

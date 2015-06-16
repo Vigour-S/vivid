@@ -13,10 +13,10 @@ import java.util.UUID;
 @Table(value = "pins")
 public class Pins {
 
-    @PrimaryKey(value = "user_id")
+    @Column(value = "user_id")
     private UUID userId;
 
-    @Column(value = "pin_id")
+    @PrimaryKey(value = "pin_id")
     private UUID pinId;
 
     @Column(value = "body")

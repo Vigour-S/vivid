@@ -1,21 +1,22 @@
 package vivid.controller;
 
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import vivid.feed.Comment;
-import vivid.feed.Followers;
-import vivid.feed.Followings;
-import vivid.feed.TimeLine;
+import vivid.entity.User;
+import vivid.feed.*;
 import vivid.feed.compositekey.FollowersKey;
 import vivid.feed.compositekey.FollowingsKey;
 import vivid.repository.UserRepository;
 import vivid.repository.cassandra.CommentRepository;
 import vivid.repository.cassandra.FollowersRepository;
 import vivid.repository.cassandra.FollowingsRepository;
+import vivid.repository.cassandra.PinsRepository;
 import vivid.service.FeedService;
 
 import java.util.*;
@@ -34,6 +35,9 @@ public class FeedsController {
 
     @Autowired
     private FollowingsRepository followingsRepository;
+
+    @Autowired
+    private PinsRepository pinsRepository;
 
     @Autowired
     private FeedService feedService;
@@ -57,7 +61,7 @@ public class FeedsController {
         followingsRepository.save(followings);
     }
 
-    @RequestMapping(value = "/unFollow", method = RequestMethod.POST)
+    @RequestMapping(value = "/un_follow", method = RequestMethod.POST)
     public void unFollow(@RequestParam String username, @RequestParam String usernameToFollow) {
         UUID userId = userRepository.findByUsername(username).getId();
         UUID userIdToFollow = userRepository.findByUsername(usernameToFollow).getId();
@@ -65,24 +69,40 @@ public class FeedsController {
         followingsRepository.delete(new FollowingsKey(userId, userIdToFollow));
     }
 
-    @RequestMapping(value = "/timeLine", method = RequestMethod.POST)
+    @RequestMapping(value = "/timeline", method = RequestMethod.GET)
     public
     @ResponseBody
-    Map showTimeLine(@RequestParam String username) {
-        List<TimeLine> timeLines = feedService.findTimeLineByUsername(username);
+    Map showTimeLine(@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ") @RequestParam("last_updated_till") Date lastUpdatedTill, @RequestParam int count) {
+        String username = (String) SecurityUtils.getSubject().getPrincipal();
+        List<TimeLine> timeLines = feedService.findTimeLineByUsernameAndTimeAndCount(username, lastUpdatedTill, count);
+        //List<TimeLine> timeLines = feedService.findTimeLineByUsername(username);
+        List<Post> result = new LinkedList<Post>();
+        for (TimeLine timeLine : timeLines) {
+            User user = userRepository.findById(timeLine.getPk().getUserId());
+            Pins pins = pinsRepository.findOne(timeLine.getPinId());
+            Post post = new Post();
+            post.setUsername(user.getUsername());
+            post.setAvatar(user.getAvatar());
+            post.setTimestamp(timeLine.getPk().getTime());
+            post.setUrl(pins.getBody());
+            post.setTitle("");  // TODO:
+            post.setDescription(pins.getBody());
+            post.setIsVideo(false);  // TODO:
+            result.add(post);
+        }
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("timeLines", timeLines);
+        map.put("timeline", result);
         return map;
     }
 
-    @RequestMapping(value = "/addComment", method = RequestMethod.POST)
+    @RequestMapping(value = "/add_comment", method = RequestMethod.POST)
     public void createComment(@RequestParam UUID pinId, @RequestParam String username, @RequestParam String body) {
         UUID userId = userRepository.findByUsername(username).getId();
         Date date = new Date();
         commentRepository.save(new Comment(pinId, date, userId, body));
     }
 
-    @RequestMapping(value = "/listComment", method = RequestMethod.POST)
+    @RequestMapping(value = "/list_comment", method = RequestMethod.POST)
     public
     @ResponseBody
     Map showComment(@RequestParam UUID pinId) {
@@ -90,5 +110,72 @@ public class FeedsController {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("comments", comments);
         return map;
+    }
+
+}
+
+class Post {
+    private String username;
+    private String avatar;
+    private String url;
+    private String title;
+    private String description;
+    private Date timestamp;
+    private Boolean isVideo;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public Boolean getIsVideo() {
+        return isVideo;
+    }
+
+    public void setIsVideo(Boolean isVideo) {
+        this.isVideo = isVideo;
     }
 }
