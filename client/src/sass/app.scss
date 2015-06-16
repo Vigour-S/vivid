@@ -179,19 +179,27 @@ img {
   height: 80px;
   border: 1px solid #eee;
 }
-.user-info .user-info-detail {
-  display: inline-block;
+.user-detail {
+  .user-info .user-info-detail {
+    display: inline-block;
+  }
+  .user-info-detail span {
+    display: block;
+    color: #333;
+    line-height: 28px;
+  }
+  .user-info-detail .user-email {
+    color: #666;
+    font-weight: lighter;
+  }
 }
-.user-info-detail span {
-  display: block;
-  color: #333;
-  line-height: 28px;
-}
-.user-info-detail .user-email {
-  color: #666;
-  font-weight: lighter;
-}
+
 .user-timeline {
   padding: 10px 0;
   border-top: 2px solid #999;
+}
+.user-profile .user-avatar {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #eee;
 }
