@@ -33,19 +33,19 @@ public class ShiroConfig {
                 = new DefaultWebSecurityManager();
         securityManager.setRealm(realm());
         securityManager.setCacheManager(new MemoryConstrainedCacheManager());  // TODO: use EhCache?
-        securityManager.setSessionManager(new DefaultWebSessionManager());  // TODO: use Hazelcast?
-//        securityManager.setSessionManager(sessionManager());
+        //securityManager.setSessionManager(new DefaultWebSessionManager());  // TODO: use Hazelcast?
+        securityManager.setSessionManager(sessionManager());
         return securityManager;
     }
 
-//    @Bean
-//    public DefaultWebSessionManager sessionManager() {
-//        final DefaultWebSessionManager sessionManager
-//                = new DefaultWebSessionManager();
-////        sessionManager.setSessionDAO(sessionDao());
-//        sessionManager.setGlobalSessionTimeout(43200000); // 12 hours
-//        return sessionManager;
-//    }
+    @Bean
+    public DefaultWebSessionManager sessionManager() {
+        final DefaultWebSessionManager sessionManager
+                = new DefaultWebSessionManager();
+        sessionManager.setSessionIdCookieEnabled(true);
+        sessionManager.setGlobalSessionTimeout(43200000); // 12 hours
+        return sessionManager;
+    }
 
 //    @Bean
 //    public SessionDAO sessionDao() {
