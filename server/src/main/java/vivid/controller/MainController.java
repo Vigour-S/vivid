@@ -98,4 +98,12 @@ public class MainController {
         return "redirect:/";
     }
 
+    @RequestMapping(value = "/profile", method = RequestMethod.GET)
+    public String profile(Model model) {
+        String username = (String) SecurityUtils.getSubject().getPrincipal();
+        User user = userRepository.findByUsername(username);
+        model.addAttribute("user", user);
+        return "users/profile";
+    }
+
 }
