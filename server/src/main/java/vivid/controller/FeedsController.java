@@ -1,13 +1,13 @@
 package vivid.controller;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import vivid.entity.Resource;
 import vivid.entity.User;
 import vivid.feed.*;
 import vivid.feed.compositekey.FollowersKey;
@@ -19,6 +19,11 @@ import vivid.repository.cassandra.FollowingsRepository;
 import vivid.repository.cassandra.PinsRepository;
 import vivid.service.FeedService;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -109,6 +114,15 @@ public class FeedsController {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("comments", comments);
         return map;
+    }
+
+    @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET)
+    public String detail(@PathVariable UUID id, Model model) {
+        Pins pins = pinsRepository.findOne(id);
+        model.addAttribute("pins", pins);
+        List<Comment> comments = feedService.findCommentByPinId(id);
+        model.addAttribute("comments", comments);
+        return "feeds/detail";
     }
 
 }
