@@ -68,10 +68,10 @@ public class FeedsController {
     }
 
     @RequestMapping(value = "/un_follow", method = RequestMethod.POST)
-    public void unFollow(@RequestParam String usernameToFollow) {
+    public void unFollow(@RequestParam String usernameToUnFollow) {
         String username = (String) SecurityUtils.getSubject().getPrincipal();
         UUID userId = userRepository.findByUsername(username).getId();
-        UUID userIdToFollow = userRepository.findByUsername(usernameToFollow).getId();
+        UUID userIdToFollow = userRepository.findByUsername(usernameToUnFollow).getId();
         followersRepository.delete(new FollowersKey(userIdToFollow, userId));
         followingsRepository.delete(new FollowingsKey(userId, userIdToFollow));
     }

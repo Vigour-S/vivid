@@ -5,10 +5,10 @@ import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import vivid.entity.Permission;
 import vivid.entity.Role;
 import vivid.entity.User;
@@ -16,12 +16,13 @@ import vivid.repository.PermissionRepository;
 import vivid.repository.RoleRepository;
 import vivid.repository.UserRepository;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
  * Created by wujy on 15-6-3.
  */
-@RestController
+@Controller
 @RequestMapping("/users")
 public class UsersController {
 
@@ -40,15 +41,22 @@ public class UsersController {
     private PermissionRepository permissionRepository;
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<User> getAll() {
+    public @ResponseBody List<User> getAll() {
         SecurityUtils.getSubject().checkRole("ADMIN");
         return userRepository.findAll();
     }
 
     @RequestMapping(value = "do_something", method = RequestMethod.GET)
-    public List<User> dontHavePermission() {
+    public @ResponseBody List<User> dontHavePermission() {
         SecurityUtils.getSubject().checkPermission("DO_SOMETHING");
         return userRepository.findAll();
+    }
+
+    @RequestMapping(value = "/{username}", method = RequestMethod.GET)
+    public String picture(@PathVariable String username, Model model) {
+        User user = userRepository.findByUsername(username);
+        model.addAttribute("user", user);
+        return "users/profile";
     }
 
     @Transactional

@@ -20,8 +20,12 @@
                             <span class="title"><shiro:principal/>'s Profile</span>
                         </div>
                         <div class="panel-body">
-                            Username: <label th:text="${user.username}"></label>
-                            Email: <label th:text="${user.email}"></label>
+                            <div>
+                                Username: <label th:text="${user.username}"></label>
+                                Email: <label th:text="${user.email}"></label>
+                            </div>
+                            <button th:href="@{/follow?usernameToFollow=${user.username}}">Follow</button>
+                            <button th:href="@{/un_follow?usernameToUnFollow=${user.username}}">UnFollow</button>
                         </div>
                     </div>
                 </div>
