@@ -57,6 +57,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
     compile "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
     compile "org.springframework.boot:spring-boot-starter-redis:${springBootVersion}"
+    compile "org.springframework.boot:spring-boot-starter-thymeleaf:${springBootVersion}"
 //    compile "org.springframework.boot:spring-boot-starter-security:${springBootVersion}"
 
     compile "org.apache.shiro:shiro-core:1.2.3"
@@ -64,7 +65,8 @@ dependencies {
     compile "org.apache.shiro:shiro-spring:1.2.3"
 
     // Jade is used as the template engine for serving HTML
-    compile "com.domingosuarez.boot:spring-boot-starter-jade4j:0.2"
+//    compile "com.domingosuarez.boot:spring-boot-starter-jade4j:0.2"
+    compile "com.github.theborakompanioni:thymeleaf-extras-shiro:1.1.0"
 
     // for use in mocking http interactions
     testCompile "org.springframework:spring-test:4.1.6.RELEASE"
