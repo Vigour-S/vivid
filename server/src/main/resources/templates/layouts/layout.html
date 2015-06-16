@@ -1,77 +1,80 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head th:fragment="headerFragment">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Vision Explorer</title>
-    <link th:href="@{/webjars/font-awesome/4.3.0-2/css/font-awesome.min.css}" rel="stylesheet" type="text/css"/>
-    <link th:href="@{/css/app.css}" rel="stylesheet" type="text/css"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <title>Vision Explorer</title>
+  <link th:href="@{/css/app.css}" rel="stylesheet" type="text/css"/>
 </head>
 <body>
-    <div th:fragment="navbarFragment">
-        <div class="navbar navbar-default navbar-fixed-top" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#main_navbar_items">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="/">
-                        <img th:src="@{/public/logo.svg}"/>
-                    </a>
-                </div>
-                <div class="main_navbar_items navbar-collapse collapse">
-                    <form class="navbar-form navbar-left" role="search">
-                        <div class="form-group">
-                            <div class="input-group">
-                                <input class="form-control" type="text"/>
-                                <span class="input-group-btn">
-                                  <button class="btn btn-default" type="button">Go</button>
-                                </span>
-                            </div>
-                        </div>
-                    </form>
-                    <ul class="nav navbar-nav navbar-right">
-                        <shiro:guest>
-                            <li>
-                                <a th:href="@{/signup}">Sign up</a>
-                            </li>
-                            <li>
-                                <a th:href="@{/login}">Login</a>
-                            </li>
-                        </shiro:guest>
-                        <shiro:authenticated>
-                            <li>
-                                <a th:href="@{/profile}"><shiro:principal/></a>
-                            </li>
-                        </shiro:authenticated>
-                    </ul>
-                </div>
-            </div>
+  <div th:fragment="navbarFragment">
+    <div class="navbar navbar-default navbar-fixed-top" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#main_navbar_items">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">
+            <img th:src="@{/public/logo.svg}"/>
+          </a>
         </div>
-    </div>
-    <div th:fragment="footerFragment">
-        <div id="footer" style="margin-top: 50px; padding-top: 20px; padding-bottom: 30px;">
-            <div class="container">
-                <div class="col-md-3">
-                    <p>
-                        <a th:href="@{/}">Home</a>
-                        <a th:href="@{#}">Vision Explorer</a>
-                    </p>
-                </div>
-                <div class="col-md-3">
-                    <p>
-                        <a th:href="@{/}">Home</a>
-                        <a th:href="@{#}">Vision Explorer</a>
-                    </p>
-                </div>
-                <div class="col-md-6">
-                    <span class="pull-right">
-                        Copyright 2015
-                    </span>
-                </div>
+        <div class="main_navbar_items navbar-collapse collapse">
+          <form class="navbar-form navbar-left" role="search">
+            <div class="form-group">
+              <div class="input-group">
+                <input class="form-control" type="text"/>
+                <span class="input-group-btn">
+                  <button class="btn btn-default" type="button">Go</button>
+                </span>
+              </div>
             </div>
+          </form>
+          <ul class="nav navbar-nav navbar-right">
+            <shiro:guest>
+              <li>
+                <a th:href="@{/signup}">Sign up</a>
+              </li>
+              <li>
+                <a th:href="@{/login}">Login</a>
+              </li>
+            </shiro:guest>
+            <shiro:authenticated>
+              <li>
+                <a th:href="@{/profile}"><shiro:principal/></a>
+              </li>
+            </shiro:authenticated>
+          </ul>
         </div>
+      </div>
     </div>
+  </div>
+
+
+  <div th:fragment="footerFragment">
+    <div id="footer" style="margin-top: 50px; padding-top: 20px; padding-bottom: 30px;">
+      <div class="container">
+        <div class="col-md-3">
+          <p>
+            <a th:href="@{/}">Home</a>
+            <a th:href="@{#}">Vision Explorer</a>
+          </p>
+        </div>
+        <div class="col-md-3">
+          <p>
+            <a th:href="@{/}">Home</a>
+            <a th:href="@{#}">Vision Explorer</a>
+          </p>
+        </div>
+        <div class="col-md-6">
+          <span class="pull-right">
+            Copyright 2015
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 </body>
 </html>
