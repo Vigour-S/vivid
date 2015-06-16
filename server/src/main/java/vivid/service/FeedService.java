@@ -9,7 +9,16 @@ import org.springframework.cassandra.core.RowMapper;
 import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.stereotype.Service;
 import vivid.feed.*;
+import vivid.feed.compositekey.TimeLineKey;
+import vivid.repository.UserRepository;
+import vivid.repository.cassandra.PinsRepository;
+import vivid.repository.cassandra.TimeLineRepository;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,6 +30,17 @@ public class FeedService {
 
     @Autowired
     private CassandraOperations cassandraOperations;
+
+    @Autowired
+    private PinsRepository pinsRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private TimeLineRepository timeLineRepository;
+
+    static final long PERIOD = 30;
 
     public List<Followers> findFollowersByUserId(UUID userId) {
         Select select = QueryBuilder.select().from("followers");
@@ -76,4 +96,59 @@ public class FeedService {
             }
         });
     }
+
+    public void saveResourcePin(String username, String body) {
+        //save post
+        UUID userId = userRepository.findByUsername(username).getId();
+        UUID pinId = UUID.randomUUID();
+        Date date = new Date();
+        pinsRepository.save(new Pins(userId, pinId, date, body));
+
+        //find followers
+        List<Followers> followers = findFollowersByUserId(userId);
+
+        //push
+        for (Followers f : followers) {
+            UUID tempId = f.getPk().getFollowerId();
+            Duration duration = Duration.between(
+                    userRepository.findById(tempId).getLastLoginDate(),
+                    ZonedDateTime.of(LocalDateTime.now(), ZoneId.systemDefault())
+            );
+            if (duration.toDays() < PERIOD) {
+                TimeLine timeLine = new TimeLine(new TimeLineKey(tempId, date), pinId);
+                timeLineRepository.save(timeLine);
+            }
+
+            timeLineRepository.save(new TimeLine(new TimeLineKey(userId, date), pinId));
+        }
+    }
+
+    public List<TimeLine> findTimeLineByUsername(String username) {
+        UUID userId = userRepository.findByUsername(username).getId();
+        Duration duration = Duration.between(
+                userRepository.findById(userId).getLastLoginDate(),
+                ZonedDateTime.of(LocalDateTime.now(), ZoneId.systemDefault())
+        );
+
+        //pull
+        if (duration.toDays() >= PERIOD) {
+            //find followers
+            List<Followings> followings = findFollowingsByUserId(userId);
+            for (Followings f : followings) {
+                UUID tempId = f.getPk().getFollowingId();
+                List<Pins> pins = findPinsByUserId(tempId);
+                for (Pins p : pins) {
+                    Duration d = Duration.between(userRepository.findById(userId).getLastLoginDate(),
+                            ZonedDateTime.of(LocalDateTime.ofInstant(p.getTime().toInstant(),
+                                            ZoneId.systemDefault()), ZoneId.systemDefault()
+                            )
+                    );
+                    if (d.toDays() >= PERIOD)
+                        timeLineRepository.save(new TimeLine(userId, p.getTime(), p.getPinId()));
+                }
+            }
+        }
+        return findTimelineByUserId(userId);
+    }
+
 }

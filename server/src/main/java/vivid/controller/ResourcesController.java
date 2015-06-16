@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import vivid.entity.Resource;
 import vivid.repository.ResourceRepository;
+import vivid.service.FeedService;
 import vivid.service.ResourceService;
 
 import javax.servlet.http.HttpServletResponse;
@@ -36,6 +37,9 @@ public class ResourcesController {
     @Autowired
     private ResourceService resourceService;
 
+    @Autowired
+    private FeedService feedService;
+
     @RequestMapping(value = "/upload", method = RequestMethod.GET)
     public String formUpload() {
         SecurityUtils.getSubject().checkPermission("UPLOAD");
@@ -54,7 +58,9 @@ public class ResourcesController {
 
     @Transactional
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public @ResponseBody Map handleFormUpload(@RequestParam MultipartFile file) {
+    public
+    @ResponseBody
+    Map handleFormUpload(@RequestParam MultipartFile file) {
         SecurityUtils.getSubject().checkPermission("UPLOAD");
         try {
             if (file.isEmpty()) {
@@ -74,6 +80,9 @@ public class ResourcesController {
             resourceService.saveFile(file.getBytes(), resource.getId(), file.getOriginalFilename());
 
             resource.setUrl("/resources/view/" + resource.getId());
+
+            // save pins to timeline
+            feedService.saveResourcePin((String) SecurityUtils.getSubject().getPrincipal(), resource.getUrl());
 
             List<Resource> list = new LinkedList<Resource>();
             list.add(resource);
@@ -95,7 +104,7 @@ public class ResourcesController {
         try {
             InputStream is = new FileInputStream(imageFile);
             IOUtils.copy(is, response.getOutputStream());
-        } catch(IOException e) {
+        } catch (IOException e) {
             log.error("Could not show picture " + id, e);
         }
     }
