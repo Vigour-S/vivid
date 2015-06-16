@@ -23,9 +23,8 @@ import java.util.*;
 /**
  * Created by xiezhuohan on 15-6-10.
  */
-
 @Controller
-public class PinsController {
+public class FeedsController {
 
     @Autowired
     private UserRepository userRepository;
@@ -66,7 +65,7 @@ public class PinsController {
         followingsRepository.delete(new FollowingsKey(userId, userIdToFollow));
     }
 
-    @RequestMapping(value = "/timeLine", method = RequestMethod.GET)
+    @RequestMapping(value = "/timeLine", method = RequestMethod.POST)
     public
     @ResponseBody
     Map showTimeLine(@RequestParam String username) {
@@ -83,7 +82,7 @@ public class PinsController {
         commentRepository.save(new Comment(pinId, date, userId, body));
     }
 
-    @RequestMapping(value = "/listComment", method = RequestMethod.GET)
+    @RequestMapping(value = "/listComment", method = RequestMethod.POST)
     public
     @ResponseBody
     Map showComment(@RequestParam UUID pinId) {
