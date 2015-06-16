@@ -15,17 +15,16 @@ import vivid.entity.Permission;
 import vivid.entity.Resource;
 import vivid.entity.Role;
 import vivid.entity.User;
+import vivid.feed.Followings;
 import vivid.repository.PermissionRepository;
 import vivid.repository.ResourceRepository;
 import vivid.repository.RoleRepository;
 import vivid.repository.UserRepository;
+import vivid.service.FeedService;
 import vivid.service.ResourceService;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by wujy on 15-6-3.
@@ -43,6 +42,9 @@ public class UsersController {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private FeedService feedService;
 
     @Autowired
     private PermissionRepository permissionRepository;
@@ -115,6 +117,18 @@ public class UsersController {
     public String picture(@PathVariable String username, Model model) {
         User user = userRepository.findByUsername(username);
         model.addAttribute("user", user);
+        UUID userId = userRepository.findByUsername((String) SecurityUtils.getSubject().getPrincipal()).getId();
+        if (userId.equals(user.getId())) {  // self
+            model.addAttribute("isSelf", true);
+        } else {
+            model.addAttribute("isSelf", false);
+        }
+        List<Followings> followings = feedService.findFollowingsByUserIdAndUserId(userId, user.getId());
+        if (followings != null && followings.size() > 0) {
+            model.addAttribute("isFollowed", true);
+        } else {
+            model.addAttribute("isFollowed", false);
+        }
         return "users/detail";
     }
 

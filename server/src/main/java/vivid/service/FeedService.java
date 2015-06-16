@@ -53,6 +53,18 @@ public class FeedService {
         });
     }
 
+    public List<Followings> findFollowingsByUserIdAndUserId(UUID userId1, UUID userId2) {
+        Select select = QueryBuilder.select().from("followings");
+        select.where(QueryBuilder.eq("user_id", userId1));
+        select.where(QueryBuilder.eq("following_id", userId2));
+        return cassandraOperations.query(select, new RowMapper<Followings>() {
+            @Override
+            public Followings mapRow(Row row, int rowNum) throws DriverException {
+                return new Followings(row.getUUID("user_id"), row.getUUID("following_id"), row.getDate("since"));
+            }
+        });
+    }
+
     public List<Followings> findFollowingsByUserId(UUID userId) {
         Select select = QueryBuilder.select().from("followings");
         select.where(QueryBuilder.eq("user_id", userId));
