@@ -1,6 +1,8 @@
 package vivid.entity;
 
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,13 +20,18 @@ import java.util.Set;
 @Table(name = "users")
 public class User extends BaseEntity {
 
+    @Length(min = 4, max = 20)
+    @NotEmpty
     @Column(name = "username", unique = true, nullable = false, length = 45)
     private String username;
 
+    @Length(min = 6, max = 256)
+    @NotEmpty
     @Column(name = "password", nullable = false)
     private String password;
 
     @Email
+    @NotEmpty
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 

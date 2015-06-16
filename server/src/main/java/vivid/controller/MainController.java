@@ -8,8 +8,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,13 +22,15 @@ import vivid.entity.User;
 import vivid.repository.RoleRepository;
 import vivid.repository.UserRepository;
 
+import javax.validation.Valid;
+
 /**
  * Created by fantasticfears on 15-5-21.
  */
 @Controller
-public class SessionsController {
+public class MainController {
 
-    private static final Logger log = LoggerFactory.getLogger(SessionsController.class);
+    private static final Logger log = LoggerFactory.getLogger(MainController.class);
 
     @Autowired
     private DefaultPasswordService passwordService;
@@ -64,25 +70,31 @@ public class SessionsController {
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
-    public String signup() {
+    public String signup(User user) {
         return "users/new";
     }
 
     @Transactional
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public String register(@RequestParam String email, @RequestParam String username, @RequestParam String password, @RequestParam String confirm, RedirectAttributes redirectAttributes) {
-        if (!password.equals(confirm)) {
-            redirectAttributes.addFlashAttribute("confirm_error", "The two passwords are not match.");
-            return "redirect:/signup";
+    public String register(@ModelAttribute("user") @Valid User user, BindingResult result, @RequestParam String confirm, RedirectAttributes redirectAttributes) {
+        user = (User) result.getTarget();
+        if (confirm == null || !user.getPassword().equals(confirm)) {
+            result.addError(new FieldError("user", "password", "The two passwords are not match."));
         }
-        try {
-            User user = new User(username, passwordService.encryptPassword(password), email);
-            user.getRoles().add(roleRepository.findByName("USER"));
-            userRepository.save(user);
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/signup";
+        if (userRepository.findByEmail(user.getEmail()) != null) {
+            result.addError(new FieldError("user", "email", "The email has been used."));
         }
+        if (userRepository.findByUsername(user.getUsername()) != null) {
+            result.addError(new FieldError("user", "username", "The username has been used."));
+        }
+        if (result.hasErrors()) {
+            return "users/new";
+        }
+
+        user.setPassword(passwordService.encryptPassword(user.getPassword()));
+        user.getRoles().add(roleRepository.findByName("USER"));
+        userRepository.save(user);
+
         redirectAttributes.addFlashAttribute("message", "Sign up successfully.");
         return "redirect:/";
     }

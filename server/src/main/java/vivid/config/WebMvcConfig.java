@@ -94,6 +94,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         templateResolver.setPrefix("templates/");
         templateResolver.setSuffix(".html");
         templateResolver.setCharacterEncoding("UTF-8");
+        templateResolver.setCacheable(false);  // TODO: for debug only, should be removed!
         return templateResolver;
     }
 
