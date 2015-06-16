@@ -10,12 +10,10 @@
     <div class="row">
       <div class="col-md-9">
         <div class="panel panel-default panel-feed">
-          <div class="panel-body">
-            <span class="title" th:text="${pins.time}"></span>
-            <!--<span class="title" th:text="${pins.userId}"></span>-->
-            <!--<span th:text="${pins.time}"></span>-->
-            <img th:src="${pins.body}"/>
-          </div>
+          <!--<span class="title" th:text="${pins.time}"></span>-->
+          <!--<span class="title" th:text="${pins.userId}"></span>-->
+          <!--<span th:text="${pins.time}"></span>-->
+          <img th:src="${pins.body}"/>
         </div>
 
         <div class="panel panel-default">
@@ -32,7 +30,19 @@
         </div>
       </div>
       <div class="col-md-3">
-        
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="share-collection">
+              <h4>Share</h4>
+              <a href="#"><img th:src="@{/public/dropbox.png}"></img></a>
+              <a href="#"><img th:src="@{/public/email.png}"></img></a>
+              <a href="#"><img th:src="@{/public/facebook.png}"></img></a>
+              <a href="#"><img th:src="@{/public/twitter.png}"></img></a>
+              <a href="#"><img th:src="@{/public/instagram.png}"></img></a>
+              <a href="#"><img th:src="@{/public/tumblr.png}"></img></a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
