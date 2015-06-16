@@ -18,8 +18,8 @@
             <span class="user-email" th:text="${user.email}"></span>
           </div>
         </div>
-        <button th:href="@{/follow?usernameToFollow=${user.username}}">Follow</button>
-        <button th:href="@{/un_follow?usernameToUnFollow=${user.username}}">UnFollow</button>
+        <button th:if="${!isSelf and !isFollowed}" th:href="@{/follow?usernameToFollow=${user.username}}">Follow</button>
+        <button th:if="${!isSelf and isFollowed}" th:href="@{/un_follow?usernameToUnFollow=${user.username}}">UnFollow</button>
       </div>
     </div>
     <div id="timeline" class="user-timeline"></div>
