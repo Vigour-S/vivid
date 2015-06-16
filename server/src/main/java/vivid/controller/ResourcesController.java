@@ -61,7 +61,6 @@ public class ResourcesController {
     public
     @ResponseBody
     Map handleFormUpload(@RequestParam MultipartFile file) {
-        SecurityUtils.getSubject().checkPermission("UPLOAD");
         try {
             if (file.isEmpty()) {
                 throw new FileUploadException("The file is empty.");

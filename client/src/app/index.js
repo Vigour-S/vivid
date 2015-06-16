@@ -29,16 +29,29 @@ $(function () {
     method: 'GET',
     dataType: 'json'
   }).done(function(data) {
-    console.log(data);
-  });
-
-  $container.imagesLoaded(function(){
-    $container.masonry({
-      // selector for entry content
-      itemSelector: '.post-card',
-      columnWidth: 250
+    $.each(data.timeline, function(_, ele) {
+      $container.append(
+        '<div class="post-card" data-url="' + ele.url + '">' +
+          '<div class="resource-preview">' +
+            '<img src="' + ele.description + '">' +
+          '</div>' +
+          '<div class="user-info">' +
+            '<div class="user-avatar">' +
+               '<img src="' + ele.avatar + '">' +
+            '</div>' +
+            '<span class="user-name">' + ele.username + '</span>' +
+          '</div>' +
+        '</div>');
+    });
+    $container.imagesLoaded(function(){
+      $container.masonry({
+        // selector for entry content
+        itemSelector: '.post-card',
+        columnWidth: 250
+      });
     });
   });
+
 
   $container.infinitescroll({
     navSelector  : ".navigation",
