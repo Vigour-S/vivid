@@ -72,10 +72,10 @@ public class FeedsController {
     @RequestMapping(value = "/timeline", method = RequestMethod.GET)
     public
     @ResponseBody
-    Map showTimeLine(@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss") @RequestParam("last_updated_till") Date lastUpdatedTill, @RequestParam int count) {
+    Map showTimeLine(@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ") @RequestParam("last_updated_till") Date lastUpdatedTill, @RequestParam int count) {
         String username = (String) SecurityUtils.getSubject().getPrincipal();
-        //List<TimeLine> timeLines = feedService.findTimeLineByUsernameAndTimeAndCount(username, lastUpdatedTill, count);
-        List<TimeLine> timeLines = feedService.findTimeLineByUsername(username);
+        List<TimeLine> timeLines = feedService.findTimeLineByUsernameAndTimeAndCount(username, lastUpdatedTill, count);
+        //List<TimeLine> timeLines = feedService.findTimeLineByUsername(username);
         List<Post> result = new LinkedList<Post>();
         for (TimeLine timeLine : timeLines) {
             User user = userRepository.findById(timeLine.getPk().getUserId());

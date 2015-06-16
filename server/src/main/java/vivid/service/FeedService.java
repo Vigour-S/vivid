@@ -75,6 +75,19 @@ public class FeedService {
         });
     }
 
+    public List<TimeLine> findTimeLineByUserIdAndTimeAndCount(UUID userId, Date lastUpdatedTill, int count) {
+        Select select = QueryBuilder.select().from("timeline");
+        select.where(QueryBuilder.eq("user_id", userId));
+        select.where(QueryBuilder.lt("time", lastUpdatedTill));
+        select.limit(count);
+        return cassandraOperations.query(select, new RowMapper<TimeLine>() {
+            @Override
+            public TimeLine mapRow(Row row, int rowNum) throws DriverException {
+                return new TimeLine(row.getUUID("user_id"), row.getDate("time"), row.getUUID("pin_id"));
+            }
+        });
+    }
+
     public List<TimeLine> findTimelineByUserId(UUID userId) {
         Select select = QueryBuilder.select().from("timeline");
         select.where(QueryBuilder.eq("user_id", userId));
@@ -122,7 +135,7 @@ public class FeedService {
         timeLineRepository.save(new TimeLine(new TimeLineKey(userId, date), pinId));
     }
 
-    public List<TimeLine> findTimeLineByUsername(String username) {
+    public List<TimeLine> findTimeLineByUsernameAndTimeAndCount(String username, Date lastUpdatedTill, int count) {
         UUID userId = userRepository.findByUsername(username).getId();
         Duration duration = Duration.between(
                 userRepository.findById(userId).getLastLoginDate(),
@@ -147,7 +160,7 @@ public class FeedService {
                 }
             }
         }
-        return findTimelineByUserId(userId);
+        return findTimeLineByUserIdAndTimeAndCount(userId, lastUpdatedTill, count);
     }
 
 }
