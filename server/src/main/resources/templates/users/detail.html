@@ -22,8 +22,8 @@
         <button th:if="${!isSelf and isFollowed}" th:href="@{/un_follow?usernameToUnFollow=${user.username}}">UnFollow</button>
       </div>
     </div>
-    <div id="timeline" class="user-timeline"></div>
   </div>
+  <div id="timeline" class="user-timeline"></div>
 </div>
 <div th:include="layouts/layout :: footerFragment">
 </div>
