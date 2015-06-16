@@ -156,7 +156,7 @@ public class FeedService {
                             )
                     );
                     if (d.toDays() >= PERIOD)
-                        timeLineRepository.save(new TimeLine(userId, p.getTime(), p.getPinId()));
+                        timeLineRepository.save(new TimeLine(userId, p.getTime(), p.getPk().getPinId()));
                 }
             }
         }
