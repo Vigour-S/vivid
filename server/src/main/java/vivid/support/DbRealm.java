@@ -45,7 +45,7 @@ public class DbRealm extends AuthorizingRealm {
         email = user.getUsername();
 
         // record user last login date
-        user.setLastVisitedDate(ZonedDateTime.of(LocalDateTime.now(), ZoneId.of("UTC+08:00")));
+        user.setLastVisitedDate(ZonedDateTime.of(LocalDateTime.now(), ZoneId.systemDefault()));
         userRepository.save(user);
 
         return new SimpleAuthenticationInfo(email, user.getPassword().toCharArray(),

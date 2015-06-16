@@ -66,7 +66,7 @@ public class PinsController {
             UUID tempId = f.getPk().getFollowerId();
             Duration duration = Duration.between(
                     userRepository.findById(tempId).getLastLoginDate(),
-                    ZonedDateTime.of(LocalDateTime.now(), ZoneId.of("UTC+08:00"))
+                    ZonedDateTime.of(LocalDateTime.now(), ZoneId.systemDefault())
             );
             if (duration.toDays() < PERIOD) {
                 TimeLine timeLine = new TimeLine(new TimeLineKey(tempId, date), pinId);
@@ -104,7 +104,7 @@ public class PinsController {
         UUID userId = userRepository.findByUsername(username).getId();
         Duration duration = Duration.between(
                 userRepository.findById(userId).getLastLoginDate(),
-                ZonedDateTime.of(LocalDateTime.now(), ZoneId.of("UTC+08:00"))
+                ZonedDateTime.of(LocalDateTime.now(), ZoneId.systemDefault())
         );
         //pull
         if (duration.toDays() >= PERIOD) {
@@ -115,7 +115,7 @@ public class PinsController {
                 for (Pins p : pins) {
                     Duration d = Duration.between(userRepository.findById(userId).getLastLoginDate(),
                             ZonedDateTime.of(LocalDateTime.ofInstant(p.getTime().toInstant(),
-                                            ZoneId.systemDefault()), ZoneId.of("UTC+08:00")
+                                            ZoneId.systemDefault()), ZoneId.systemDefault()
                             )
                     );
                     if (d.toDays() >= PERIOD)
