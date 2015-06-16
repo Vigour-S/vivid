@@ -2,6 +2,7 @@ package vivid.controller;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,21 +10,27 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import vivid.entity.Permission;
+import vivid.entity.Resource;
 import vivid.entity.Role;
 import vivid.entity.User;
 import vivid.repository.PermissionRepository;
+import vivid.repository.ResourceRepository;
 import vivid.repository.RoleRepository;
 import vivid.repository.UserRepository;
+import vivid.service.ResourceService;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wujy on 15-6-3.
  */
 @Controller
-@RequestMapping("/users")
 public class UsersController {
 
     private static final Logger log = LoggerFactory.getLogger(UsersController.class);
@@ -40,27 +47,20 @@ public class UsersController {
     @Autowired
     private PermissionRepository permissionRepository;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "users", method = RequestMethod.GET)
     public @ResponseBody List<User> getAll() {
         SecurityUtils.getSubject().checkRole("ADMIN");
         return userRepository.findAll();
     }
 
-    @RequestMapping(value = "do_something", method = RequestMethod.GET)
+    @RequestMapping(value = "users/do_something", method = RequestMethod.GET)
     public @ResponseBody List<User> dontHavePermission() {
         SecurityUtils.getSubject().checkPermission("DO_SOMETHING");
         return userRepository.findAll();
     }
 
-    @RequestMapping(value = "/{username}", method = RequestMethod.GET)
-    public String picture(@PathVariable String username, Model model) {
-        User user = userRepository.findByUsername(username);
-        model.addAttribute("user", user);
-        return "users/profile";
-    }
-
     @Transactional
-    @RequestMapping(method = RequestMethod.PUT)
+    @RequestMapping(value = "users", method = RequestMethod.PUT)
     public void initScenario() {
         log.info("Initializing scenario..");
 
@@ -110,5 +110,13 @@ public class UsersController {
 
         log.info("Scenario initiated.");
     }
+
+    @RequestMapping(value = "users/{username}", method = RequestMethod.GET)
+    public String picture(@PathVariable String username, Model model) {
+        User user = userRepository.findByUsername(username);
+        model.addAttribute("user", user);
+        return "users/profile";
+    }
+
 
 }

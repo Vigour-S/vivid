@@ -4,6 +4,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.subject.Subject;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import vivid.entity.Resource;
 import vivid.entity.User;
+import vivid.repository.ResourceRepository;
 import vivid.repository.RoleRepository;
 import vivid.repository.UserRepository;
+import vivid.service.ResourceService;
 
 import javax.validation.Valid;
 
@@ -39,6 +44,12 @@ public class MainController {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private ResourceService resourceService;
+
+    @Autowired
+    private ResourceRepository resourceRepository;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index(Model model) {
@@ -104,6 +115,39 @@ public class MainController {
         User user = userRepository.findByUsername(username);
         model.addAttribute("user", user);
         return "users/profile";
+    }
+
+    @Transactional
+    @RequestMapping(value = "/avatar", method = RequestMethod.POST)
+    public String handleFormUpload(@RequestParam MultipartFile file, Model model) {
+        try {
+            if (file.isEmpty()) {
+                throw new FileUploadException("The file is empty.");
+            }
+
+            String digest = resourceService.calcDigest(file.getBytes());
+
+            // metadata persistence
+            Resource resource = resourceRepository.findByDigest(digest);
+            if (resource == null) {
+                resource = new Resource(file.getSize(), digest, file.getOriginalFilename(), file.getOriginalFilename(), file.getContentType());
+            }
+            resource = resourceRepository.save(resource);
+            System.out.println("Resource ID: " + resource.getId());
+
+            resourceService.saveFile(file.getBytes(), resource.getId(), file.getOriginalFilename());
+
+            resource.setUrl("/resources/view/" + resource.getId());
+
+            User user = userRepository.findByUsername((String) SecurityUtils.getSubject().getPrincipal());
+            user.setAvatar(resource.getUrl());
+            userRepository.save(user);
+            model.addAttribute("user", user);
+            return "redirect:users/profile";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }
