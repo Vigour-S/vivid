@@ -68,6 +68,13 @@
   background: green;
 }
 
+img {
+  max-width: 100%;
+  max-height: 100%;
+  width: 100%;
+  height: 100%;
+}
+
 #main {
   margin-top: 80px;
 }
@@ -101,15 +108,20 @@
 .post-card .user-avatar {
   display: inline-block;
   margin-right: 5px;
+  width: 24px;
+  height: 24px;
 }
 .user-detail {
   padding: 50px;
   font-size: 24pt;
 }
 .panel-feed {
+  max-width: 100%;
+  max-height: 100%;
   padding-top: 0;
   padding-bottom: 0;
   text-align: center;
+  overflow: hidden;
 }
 #add-comment-form {
   border-top: 2px solid #eee;
