@@ -110,11 +110,27 @@ public class MainController {
     }
 
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
-    public String profile(Model model) {
+    public String profile(User user, Model model) {
         String username = (String) SecurityUtils.getSubject().getPrincipal();
-        User user = userRepository.findByUsername(username);
+        user = userRepository.findByUsername(username);
         model.addAttribute("user", user);
         return "users/profile";
+    }
+
+    @RequestMapping(value = "/profile", method = RequestMethod.POST)
+    public String updateProfile(@ModelAttribute("user") @Valid User user, BindingResult result, @RequestParam String confirm, RedirectAttributes redirectAttributes) {
+        user = (User) result.getTarget();
+        if (confirm == null || !user.getPassword().equals(confirm)) {
+            result.addError(new FieldError("user", "password", "The two passwords are not match."));
+        }
+        if (result.hasErrors()) {
+            return "users/profile";
+        }
+
+        userRepository.save(user);
+
+        redirectAttributes.addFlashAttribute("message", "Profile update successfully.");
+        return "redirect:/profile";
     }
 
     @Transactional
