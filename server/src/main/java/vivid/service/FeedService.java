@@ -118,9 +118,8 @@ public class FeedService {
                 TimeLine timeLine = new TimeLine(new TimeLineKey(tempId, date), pinId);
                 timeLineRepository.save(timeLine);
             }
-
-            timeLineRepository.save(new TimeLine(new TimeLineKey(userId, date), pinId));
         }
+        timeLineRepository.save(new TimeLine(new TimeLineKey(userId, date), pinId));
     }
 
     public List<TimeLine> findTimeLineByUsername(String username) {
