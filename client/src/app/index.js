@@ -37,9 +37,13 @@ $(function () {
           '</div>' +
           '<div class="user-info">' +
             '<div class="user-avatar">' +
-               '<img src="' + ele.avatar + '">' +
+              '<a href="' + '/users/' + ele.username + '">' +
+                '<img src="' + ele.avatar + '">' +
+              '</a>' +
             '</div>' +
-            '<span class="user-name">' + ele.username + '</span>' +
+            '<span class="user-name">' +
+              '<a href="' + '/users/' + ele.username + '">' +
+                ele.username + '</a></span>' +
           '</div>' +
         '</div>');
     });
@@ -51,7 +55,6 @@ $(function () {
       });
     });
   });
-
 
   $container.infinitescroll({
     navSelector  : ".navigation",
@@ -67,5 +70,9 @@ $(function () {
     $container.imagesLoaded(function() {
       $container.masonry('appended', $newElems);
     });
+  });
+
+  $container.on('click', '.resource-preview', function() {
+    window.location = $(this).closest('.post-card').data('url');
   });
 });
