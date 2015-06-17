@@ -55,24 +55,16 @@
 
 
   <div th:fragment="footerFragment">
-    <div id="footer" style="margin-top: 50px; padding-top: 20px; padding-bottom: 30px;">
+    <div id="footer">
       <div class="container">
         <div class="col-md-3">
-          <p>
-            <a th:href="@{/}">Home</a>
-            <a th:href="@{#}">Vision Explorer</a>
-          </p>
+          <ul class="list-unstyled">
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a th:href="@{/}">Help</a></li>
+          </ul>
         </div>
-        <div class="col-md-3">
-          <p>
-            <a th:href="@{/}">Home</a>
-            <a th:href="@{#}">Vision Explorer</a>
-          </p>
-        </div>
-        <div class="col-md-6">
-          <span class="pull-right">
-            Copyright 2015
-          </span>
+        <div class="col-md-9">
+          <span>&copy; Copyright 2015</span>
         </div>
       </div>
     </div>
