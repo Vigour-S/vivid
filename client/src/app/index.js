@@ -14,11 +14,6 @@ $(function () {
           'width',
           progress + '%'
         );
-      },
-      done: function(e, data) {
-        $.each(data.result.files, function(index, file) {
-          $('<p>').text(file.name).appendTo(document.body);
-        });
       }
     });
   });
@@ -26,28 +21,15 @@ $(function () {
   var $container = $('#timeline');
 
   $.ajax({
-    url: '/timeline?last_updated_till=' + new Date().toISOString() + '&count=30',
+    url: '/timeline?last_updated_till=' + new Date().toISOString() + '&count=5',
     method: 'GET',
     dataType: 'json'
   }).done(function(data) {
-    var cards = []
+    var cards = [];
     $.each(data.timeline, function(_, ele) {
-      var $card = '<div class="post-card" data-url="' + ele.url + '">' +
-        '<div class="resource-preview">' +
-        '<img src="' + ele.description + '">' +
-        '</div>' +
-        '<div class="user-info">' +
-        '<div class="user-avatar">' +
-        '<a href="' + '/users/' + ele.username + '">' +
-        '<img src="' + ele.avatar + '">' +
-        '</a>' +
-        '</div>' +
-        '<span class="user-name">' +
-        '<a href="' + '/users/' + ele.username + '">' +
-        ele.username + '</a></span>' +
-        '</div>' +
-      '</div>';
+      var datetime = new Date(ele.timestamp), $card = Vivid.cardTemplate(ele);
       cards.push($card);
+      $('#timeline-next a').attr('href', '/timeline?count=10&last_updated_till=' + datetime.toISOString());
     });
     $container.append(cards).imagesLoaded(function(){
       $container.masonry({
@@ -56,21 +38,28 @@ $(function () {
         columnWidth: 250
       });
     });
-  });
-
-  $container.infinitescroll({
-    navSelector  : ".navigation",
-    // selector for the NEXT link (to page 2)
-    nextSelector : ".nav-previous a",
-    // selector for all items you'll retrieve
-    itemSelector : ".post-card",
-    loading: {
-      finishedMsg: 'No more pages to load.'
-    }
-  }, function(newElements) {
-    var $newElems = $(newElements);
-    $container.imagesLoaded(function() {
-      $container.masonry('appended', $newElems);
+    $container.infinitescroll({
+      navSelector  : "#timeline-next",
+      // selector for the NEXT link (to page 2)
+      nextSelector : "#timeline-next a",
+      // selector for all items you'll retrieve
+      itemSelector : ".post-card",
+      loading: {
+        finishedMsg: 'No more to load.'
+      },
+      dataType: 'json',
+      appendCallback: false
+    }, function(json, opts) {
+      var cards = [];
+      $.each(json.timeline, function(_, ele) {
+        var datetime = new Date(ele.timestamp), $card = Vivid.cardTemplate(ele);
+        cards.push($card);
+        $('#timeline-next a').attr('href', '/timeline?count=10&last_updated_till=' + datetime.toISOString());
+      });
+      $container.append(cards).imagesLoaded(function() {
+        $container.masonry('reloadItems');
+        $container.masonry('layout');
+      });
     });
   });
 
