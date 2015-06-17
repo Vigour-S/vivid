@@ -24,15 +24,34 @@
               <div class="col-md-4">
                 <span class="btn btn-success fileinput-button">
                   <i class="fa fa-plus"></i>
-                  <span>Select files...</span>
+                  <span>Upload from filesystem...</span>
                   <!-- The file input field used as target for the file upload widget -->
                   <input id="fileupload" type="file" name="file"></input>
                 </span>
               </div>
+            </div>
+            <div class="row">
               <div class="col-md-12">
-                <div id="progress">
-                  <div class="bar" style="width: 0%;"></div>
+                <div id="progress" class="progress">
+                  <div class="bar progress-bar" style="width: 0%;"></div>
                 </div>
+              </div>
+            </div>
+            <hr/>
+            <div class="row">
+              <div class="col-md-12">
+                <form class="form-horizontal" action="#" th:action="@{/resources/upload_by_url}" th:object="${user}" method="post">
+                  <div class="form-group">
+                    <div class="col-md-9">
+                      <input id="fetch-by-url" class="form-control" type="text" name="fetch_by_url"/>
+                      <!--<input id="fetch-by-url" class="form-control" th:field="*{fetch_by_url}" type="text" name="fetch_by_url"/>-->
+                      <!--<span th:if="${#fields.hasErrors('fetch_by_url')}" th:errors="*{fetch_by_url}">URL Error</span>-->
+                    </div>
+                    <div class="col-md-3">
+                      <button class="btn btn-success" type="submit">Fetch</button>
+                    </div>
+                  </div>
+                </form>
               </div>
             </div>
           </div>

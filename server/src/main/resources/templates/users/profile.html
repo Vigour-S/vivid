@@ -8,119 +8,150 @@
 <div id="main">
   <div class="container">
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-offset-2 col-md-8">
         <div class="panel panel-default user-profile">
           <div class="panel-heading">
             <span class="title"><shiro:principal/>'s Profile</span>
           </div>
           <div class="panel-body">
-            <div class="user-avatar">
-              <img th:src="@{${user.avatar}}"/>
+            <div class="row">
+              <div class="col-md-2">
+                <label>Username</label>
+              </div>
+              <div class="col-md-10">
+                <span th:text="${user.username}"></span>
+              </div>
             </div>
-            <p>Username: <strong th:text="${user.username}"></strong></p>
-            <p>Email: <strong th:text="${user.email}"></strong></p>
+            <div class="row">
+              <div class="col-md-2">
+                <label>Email</label>
+              </div>
+              <div class="col-md-10">
+                <span th:text="${user.email}"></span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-2">
+                <label>Avatar</label>
+              </div>
+              <div class="col-md-10">
+                <div class="user-avatar">
+                  <img th:src="@{${user.avatar}}"/>
+                </div>
+                <span class="btn btn-success fileinput-button">
+                  <i class="fa fa-plus"></i>
+                  <span>Select files...</span>
+                  <!-- The file input field used as target for the file upload widget -->
+                  <input id="fileupload" type="file" name="file"></input>
+                </span>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
-      <div class="col-md-12">
+      <div class="col-md-offset-2 col-md-8">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <span class="title">Upload Avatar</span>
+            <span class="title">Update Password</span>
           </div>
           <div class="panel-body">
-            <form class="form-horizontal" action="avatar" method="post" enctype="multipart/form-data">
+            <form class="form-horizontal" action="#" th:action="@{/profile}" th:object="${user}" method="post">
+              <input id="email" class="form-control" th:field="*{email}" type="hidden"/>
+              <input id="username" class="form-control" th:field="*{username}" type="hidden" name="username"/>
               <div class="form-group">
-                <label class="control-label col-md-1" for="file">File</label>
-                <div class="col-md-11">
-                  <input id="file" class="form-control" type="file" name="file"/>
+                <label class="control-label col-md-3" for="password">New Password</label>
+                <div class="col-md-9">
+                  <input id="password" class="form-control" th:field="*{password}" type="password" name="password"/>
+                  <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3" for="confirm">Confirm</label>
+                <div class="col-md-9">
+                  <input id="confirm" class="form-control" type="password" name="confirm"/>
                 </div>
               </div>
               <div class="form-actions form-group">
-                  <div class="col-md-offset-1 col-md-11">
-                      <button class="btn btn-default" type="submit">Upload</button>
-                  </div>
+                <div class="col-md-offset-3 col-md-9">
+                  <button class="btn btn-default" type="submit">Update</button>
+                </div>
               </div>
             </form>
           </div>
         </div>
       </div>
-        <div class="col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <span class="title">Update Profile</span>
+      <div class="col-md-offset-2 col-md-8">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <span class="title">Update Profile</span>
+          </div>
+          <div class="panel-body">
+            <form class="form-horizontal" action="#" th:action="@{/profile}" th:object="${user}" method="post">
+              <div class="form-group">
+                <label class="control-label col-md-3" for="nickname">Nickname</label>
+                <div class="col-md-9">
+                  <input id="nickname" class="form-control" th:field="*{nickname}" type="text" name="nickname"/>
+                  <span th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Nickname Error</span>
                 </div>
-                <div class="panel-body">
-                    <form class="form-horizontal" action="#" th:action="@{/profile}" th:object="${user}" method="post">
-                        <input id="email" class="form-control" th:field="*{email}" type="hidden"/>
-                        <input id="username" class="form-control" th:field="*{username}" type="hidden" name="username"/>
-                        <div class="form-group">
-                            <label class="control-label col-md-3" for="password">Password</label>
-                            <div class="col-md-9">
-                                <input id="password" class="form-control" th:field="*{password}" type="password" name="password"/>
-                                <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-3" for="confirm">Confirm</label>
-                            <div class="col-md-9">
-                                <input id="confirm" class="form-control" type="password" name="confirm"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-3" for="nickname">Nickname</label>
-                            <div class="col-md-9">
-                                <input id="nickname" class="form-control" th:field="*{nickname}" type="text" name="nickname"/>
-                                <span th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Nickname Error</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-3" for="website">Website</label>
-                            <div class="col-md-9">
-                                <input id="website" class="form-control" th:field="*{website}" type="text" name="website"/>
-                                <span th:if="${#fields.hasErrors('website')}" th:errors="*{website}">Website Error</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-3" for="school">School</label>
-                            <div class="col-md-9">
-                                <input id="school" class="form-control" th:field="*{school}" type="text" name="school"/>
-                                <span th:if="${#fields.hasErrors('school')}" th:errors="*{school}">School Error</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-3" for="password">Country</label>
-                            <div class="col-md-9">
-                                <input id="country" class="form-control" th:field="*{country}" type="text" name="country"/>
-                                <span th:if="${#fields.hasErrors('country')}" th:errors="*{country}">Country Error</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-3" for="password">City</label>
-                            <div class="col-md-9">
-                                <input id="city" class="form-control" th:field="*{city}" type="text" name="city"/>
-                                <span th:if="${#fields.hasErrors('city')}" th:errors="*{city}">City Error</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-3" for="password">Phone</label>
-                            <div class="col-md-9">
-                                <input id="phone" class="form-control" th:field="*{phone}" type="text" name="phone"/>
-                                <span th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">Phone Error</span>
-                            </div>
-                        </div>
-                        <div class="form-actions form-group">
-                            <div class="col-md-offset-3 col-md-9">
-                                <button class="btn btn-default" type="submit">Update</button>
-                            </div>
-                        </div>
-                    </form>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3" for="website">Website</label>
+                <div class="col-md-9">
+                  <input id="website" class="form-control" th:field="*{website}" type="text" name="website"/>
+                  <span th:if="${#fields.hasErrors('website')}" th:errors="*{website}">Website Error</span>
                 </div>
-            </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3" for="school">School</label>
+                <div class="col-md-9">
+                  <input id="school" class="form-control" th:field="*{school}" type="text" name="school"/>
+                  <span th:if="${#fields.hasErrors('school')}" th:errors="*{school}">School Error</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3" for="password">Country</label>
+                <div class="col-md-9">
+                  <input id="country" class="form-control" th:field="*{country}" type="text" name="country"/>
+                  <span th:if="${#fields.hasErrors('country')}" th:errors="*{country}">Country Error</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3" for="password">City</label>
+                <div class="col-md-9">
+                  <input id="city" class="form-control" th:field="*{city}" type="text" name="city"/>
+                  <span th:if="${#fields.hasErrors('city')}" th:errors="*{city}">City Error</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3" for="password">Phone</label>
+                <div class="col-md-9">
+                  <input id="phone" class="form-control" th:field="*{phone}" type="text" name="phone"/>
+                  <span th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">Phone Error</span>
+                </div>
+              </div>
+              <div class="form-actions form-group">
+                <div class="col-md-offset-3 col-md-9">
+                  <button class="btn btn-default" type="submit">Update</button>
+                </div>
+              </div>
+            </form>
+          </div>
+          </div>
         </div>
       </div>
     </div>
 </div>
 <div th:include="layouts/layout :: footerFragment">
 </div>
+<script th:src="@{/lib/jquery/dist/jquery.min.js}"></script>
+<script th:src="@{/lib/bootstrap-sass/assets/javascripts/bootstrap.min.js}"></script>
+<script th:src="@{/lib/jquery-ui/ui/minified/widget.min.js}"></script>
+<script th:src="@{/lib/jquery.iframe-transport/jquery.iframe-transport.js}"></script>
+<script th:src="@{/public/jquery.fileupload.js}"></script>
+<script th:src="@{/lib/jquery-infinite-scroll/jquery.infinitescroll.min.js}"></script>
+<script th:src="@{/lib/imagesloaded/imagesloaded.pkgd.min.js}"></script>
+<script th:src="@{/lib/masonry/dist/masonry.pkgd.min.js}"></script>
+<script th:src="@{/app/profile.js}"></script>
 </body>
 </html>
