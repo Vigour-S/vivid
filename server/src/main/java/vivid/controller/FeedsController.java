@@ -66,7 +66,6 @@ public class FeedsController {
             timeLineRepository.save(new TimeLine(new TimeLineKey(userIdToFollow, p.getTime()), p.getPk().getPinId()));
         }
         return "redirect:" + request.getHeader("Referer");
-
     }
 
     @RequestMapping(value = "/un_follow", method = RequestMethod.POST)
@@ -93,7 +92,7 @@ public class FeedsController {
             post.setUsername(user.getUsername());
             post.setAvatar(user.getAvatar());
             post.setTimestamp(timeLine.getPk().getTime());
-            post.setUrl("/detail/" + pins.getPinId());
+            post.setUrl("/detail/" + pins.getPk().getPinId());
             post.setTitle(null);  // TODO:
             post.setDescription(pins.getBody());
             post.setIsVideo(false);  // TODO:
