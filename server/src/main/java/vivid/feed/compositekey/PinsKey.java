@@ -3,7 +3,6 @@ package vivid.feed.compositekey;
 import org.springframework.cassandra.core.PrimaryKeyType;
 import org.springframework.data.cassandra.mapping.PrimaryKeyClass;
 import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
-import vivid.feed.Pins;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -18,7 +17,7 @@ public class PinsKey implements Serializable {
     private UUID userId;
 
     @PrimaryKeyColumn(name = "pin_id", ordinal = 1, type = PrimaryKeyType.CLUSTERED)
-    private UUID PinId;
+    private UUID pinId;
 
     public UUID getUserId() {
         return userId;
@@ -29,23 +28,23 @@ public class PinsKey implements Serializable {
     }
 
     public UUID getPinId() {
-        return PinId;
+        return pinId;
     }
 
     public void setPinId(UUID PinId) {
-        this.PinId = PinId;
+        this.pinId = PinId;
     }
 
-    public PinsKey(UUID userId, UUID PinId) {
+    public PinsKey(UUID userId, UUID pinId) {
         this.userId = userId;
-        this.PinId = PinId;
+        this.pinId = pinId;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((PinId == null) ? 0 : PinId.hashCode());
+        result = prime * result + ((pinId == null) ? 0 : pinId.hashCode());
         result = prime * result + ((userId == null) ? 0 : userId.hashCode());
         return result;
     }
@@ -59,10 +58,10 @@ public class PinsKey implements Serializable {
         if (getClass() != obj.getClass())
             return false;
         PinsKey other = (PinsKey) obj;
-        if (PinId == null) {
-            if (other.PinId != null)
+        if (pinId == null) {
+            if (other.pinId != null)
                 return false;
-        } else if (!PinId.equals(other.PinId))
+        } else if (!pinId.equals(other.pinId))
             return false;
         if (userId == null) {
             if (other.userId != null)
