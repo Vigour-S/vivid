@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cassandra.core.RowMapper;
 import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.stereotype.Service;
+import vivid.entity.User;
 import vivid.feed.*;
 import vivid.feed.compositekey.TimeLineKey;
 import vivid.repository.UserRepository;
@@ -79,6 +80,18 @@ public class FeedService {
     public List<Pins> findPinsByUserId(UUID userId) {
         Select select = QueryBuilder.select().from("pins");
         select.where(QueryBuilder.eq("user_id", userId));
+        return cassandraOperations.query(select, new RowMapper<Pins>() {
+            @Override
+            public Pins mapRow(Row row, int rowNum) throws DriverException {
+                return new Pins(row.getUUID("user_id"), row.getUUID("pin_id"), row.getDate("time"), row.getString("body"));
+            }
+        });
+    }
+
+    public List<Pins> findPinsByPinId(UUID pinId){
+        Select select = QueryBuilder.select().from("pins");
+        select.where(QueryBuilder.eq("pin_id", pinId));
+        select.allowFiltering();
         return cassandraOperations.query(select, new RowMapper<Pins>() {
             @Override
             public Pins mapRow(Row row, int rowNum) throws DriverException {
