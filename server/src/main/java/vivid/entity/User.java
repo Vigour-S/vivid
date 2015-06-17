@@ -1,5 +1,6 @@
 package vivid.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -18,6 +19,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "users")
+@JsonIgnoreProperties({"id", "createdDate", "modifiedDate", "password", "website", "school", "country", "city", "phone", "lastLoginDate", "roles"})
 public class User extends BaseEntity {
 
     @Length(min = 4, max = 20)
