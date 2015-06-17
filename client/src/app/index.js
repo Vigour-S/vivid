@@ -21,15 +21,15 @@ $(function () {
   var $container = $('#timeline');
 
   $.ajax({
-    url: '/timeline?last_updated_till=' + Date().now() + '&count=5',
+    url: '/timeline?last_updated_till=' + new Date().toISOString() + '&count=5',
     method: 'GET',
     dataType: 'json'
   }).done(function(data) {
     var cards = [];
     $.each(data.timeline, function(_, ele) {
-      var datetime = ele.timestamp, $card = Vivid.cardTemplate(ele);
+      var datetime = new Date(ele.timestamp), $card = Vivid.cardTemplate(ele);
       cards.push($card);
-      $('#timeline-next a').attr('href', '/timeline?last_updated_till=' + datetime + '&count=30');
+      $('#timeline-next a').attr('href', '/timeline?count=10&last_updated_till=' + datetime.toISOString());
     });
     $container.append(cards).imagesLoaded(function(){
       $container.masonry({
@@ -52,9 +52,9 @@ $(function () {
     }, function(json, opts) {
       var cards = [];
       $.each(json.timeline, function(_, ele) {
-        var datetime = ele.timestamp, $card = Vivid.cardTemplate(ele);
+        var datetime = new Date(ele.timestamp), $card = Vivid.cardTemplate(ele);
         cards.push($card);
-        $('#timeline-next a').attr('href', '/timeline?last_updated_till=' + datetime + '&count=30');
+        $('#timeline-next a').attr('href', '/timeline?count=10&last_updated_till=' + datetime.toISOString());
       });
       $container.append(cards).imagesLoaded(function() {
         $container.masonry('reloadItems');
