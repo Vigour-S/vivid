@@ -14,7 +14,10 @@ import vivid.feed.compositekey.FollowersKey;
 import vivid.feed.compositekey.FollowingsKey;
 import vivid.feed.compositekey.TimeLineKey;
 import vivid.repository.UserRepository;
-import vivid.repository.cassandra.*;
+import vivid.repository.cassandra.CommentRepository;
+import vivid.repository.cassandra.FollowersRepository;
+import vivid.repository.cassandra.FollowingsRepository;
+import vivid.repository.cassandra.TimeLineRepository;
 import vivid.service.FeedService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -81,7 +84,33 @@ public class FeedsController {
     public
     @ResponseBody
     Map showTimeLine(@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ") @RequestParam("last_updated_till") Date lastUpdatedTill, @RequestParam int count) {
+        lastUpdatedTill.setYear(115);  // 2015
         String username = (String) SecurityUtils.getSubject().getPrincipal();
+        List<TimeLine> timeLines = feedService.findTimeLineByUsernameAndTimeAndCount(username, lastUpdatedTill, count);
+        List<PostBean> result = new LinkedList<PostBean>();
+        for (TimeLine timeLine : timeLines) {
+            Pins pins = feedService.findPinsByPinId(timeLine.getPinId()).get(0);
+            User user = userRepository.findById(pins.getPk().getUserId());
+            PostBean postBean = new PostBean();
+            postBean.setUsername(user.getUsername());
+            postBean.setAvatar(user.getAvatar());
+            postBean.setTimestamp(timeLine.getPk().getTime());
+            postBean.setUrl("/detail/" + pins.getPk().getPinId());
+            postBean.setTitle(null);  // TODO:
+            postBean.setDescription(pins.getBody());
+            postBean.setIsVideo(false);  // TODO:
+            result.add(postBean);
+        }
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("timeline", result);
+        return map;
+    }
+
+    @RequestMapping(value = "/timeline2", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    Map showTimeLineOthers(@RequestParam String username, @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ") @RequestParam("last_updated_till") Date lastUpdatedTill, @RequestParam int count) {
+        lastUpdatedTill.setYear(115);  // 2015
         List<TimeLine> timeLines = feedService.findTimeLineByUsernameAndTimeAndCount(username, lastUpdatedTill, count);
         List<PostBean> result = new LinkedList<PostBean>();
         for (TimeLine timeLine : timeLines) {
