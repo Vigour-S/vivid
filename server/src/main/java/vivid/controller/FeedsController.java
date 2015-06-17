@@ -62,7 +62,7 @@ public class FeedsController {
         //pull
         List<Pins> pins = feedService.findPinsByUserId(userIdToFollow);
         for (Pins p : pins) {
-            timeLineRepository.save(new TimeLine(new TimeLineKey(userIdToFollow, p.getTime()), p.getPk().getPinId()));
+            timeLineRepository.save(new TimeLine(new TimeLineKey(userId, p.getTime()), p.getPk().getPinId()));
         }
         return "redirect:" + request.getHeader("Referer");
     }
