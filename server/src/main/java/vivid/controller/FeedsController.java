@@ -86,8 +86,8 @@ public class FeedsController {
         List<TimeLine> timeLines = feedService.findTimeLineByUsernameAndTimeAndCount(username, lastUpdatedTill, count);
         List<Post> result = new LinkedList<Post>();
         for (TimeLine timeLine : timeLines) {
-            User user = userRepository.findById(timeLine.getPk().getUserId());
-            Pins pins = pinsRepository.findOne(timeLine.getPinId());
+            Pins pins = feedService.findPinsByPinId(timeLine.getPinId()).get(0);
+            User user = userRepository.findById(pins.getPk().getUserId());
             Post post = new Post();
             post.setUsername(user.getUsername());
             post.setAvatar(user.getAvatar());
@@ -122,7 +122,7 @@ public class FeedsController {
 
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET)
     public String detail(@PathVariable UUID id, Model model) {
-        Pins pins = pinsRepository.findOne(id);
+        Pins pins = feedService.findPinsByPinId(id).get(0);
         model.addAttribute("pins", pins);
         List<Comment> comments = feedService.findCommentByPinId(id);
         model.addAttribute("comments", comments);
