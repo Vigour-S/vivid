@@ -100,7 +100,6 @@ img {
 .post-card .user-info {
   background: #ffffff;
   transition: all .3s;
-  border: 1px solid #eee;
   padding: 15px;
   &:hover {
     background: #f1f1f1;
@@ -201,6 +200,7 @@ img {
   border-top: 2px solid #999;
 }
 .user-profile .user-avatar {
+  display: inline-block;
   width: 30px;
   height: 30px;
   border: 1px solid #eee;
