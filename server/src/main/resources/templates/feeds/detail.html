@@ -18,6 +18,9 @@
 
         <div class="panel panel-default">
           <div class="panel-body">
+            <div th:if="${#lists.isEmpty(comments)" th:each="comment, iterationStatus : ${comments}">
+              <span>There is no comment at this time.</span>
+            </div>
             <div th:if="!${#lists.isEmpty(comments)" th:each="comment, iterationStatus : ${comments}">
               <span th:text="${comment.userId}"></span>
               <span th:text="${comment.body}"></span>
