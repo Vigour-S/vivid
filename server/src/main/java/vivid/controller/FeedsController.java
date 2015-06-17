@@ -10,9 +10,11 @@ import vivid.entity.User;
 import vivid.feed.*;
 import vivid.feed.compositekey.FollowersKey;
 import vivid.feed.compositekey.FollowingsKey;
-import vivid.feed.compositekey.TimeLineKey;
 import vivid.repository.UserRepository;
-import vivid.repository.cassandra.*;
+import vivid.repository.cassandra.CommentRepository;
+import vivid.repository.cassandra.FollowersRepository;
+import vivid.repository.cassandra.FollowingsRepository;
+import vivid.repository.cassandra.PinsRepository;
 import vivid.service.FeedService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,9 +44,6 @@ public class FeedsController {
     @Autowired
     private CommentRepository commentRepository;
 
-    @Autowired
-    private TimeLineRepository timeLineRepository;
-
     @RequestMapping(value = "/post", method = RequestMethod.POST)
     public void postPin(@RequestParam String username, @RequestParam String description) {
         feedService.saveResourcePin(username, description);
@@ -60,13 +59,7 @@ public class FeedsController {
         followersRepository.save(followers);
         Followings followings = new Followings(new FollowingsKey(userId, userIdToFollow), since);
         followingsRepository.save(followings);
-        //pull
-        List<Pins> pins = feedService.findPinsByUserId(userIdToFollow);
-        for (Pins p : pins) {
-            timeLineRepository.save(new TimeLine(new TimeLineKey(userIdToFollow, p.getTime()), p.getPk().getPinId()));
-        }
         return "redirect:" + request.getHeader("Referer");
-
     }
 
     @RequestMapping(value = "/un_follow", method = RequestMethod.POST)
