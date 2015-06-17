@@ -156,7 +156,7 @@ public class FeedService {
 
         //pull
         if (duration.toDays() >= PERIOD) {
-            //find followers
+            //find followings
             List<Followings> followings = findFollowingsByUserId(userId);
             for (Followings f : followings) {
                 UUID tempId = f.getPk().getFollowingId();
@@ -168,11 +168,10 @@ public class FeedService {
                             )
                     );
                     if (d.toDays() >= PERIOD)
-                        timeLineRepository.save(new TimeLine(userId, p.getTime(), p.getPinId()));
+                        timeLineRepository.save(new TimeLine(userId, p.getTime(), p.getPk().getPinId()));
                 }
             }
         }
         return findTimeLineByUserIdAndTimeAndCount(userId, lastUpdatedTill, count);
     }
-
 }
