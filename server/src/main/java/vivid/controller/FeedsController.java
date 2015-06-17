@@ -122,7 +122,7 @@ public class FeedsController {
 
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET)
     public String detail(@PathVariable UUID id, Model model) {
-        Pins pins = pinsRepository.findOne(id);
+        Pins pins = feedService.findPinsByPinId(id).get(0);
         model.addAttribute("pins", pins);
         List<Comment> comments = feedService.findCommentByPinId(id);
         model.addAttribute("comments", comments);
