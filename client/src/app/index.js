@@ -24,30 +24,32 @@ $(function () {
   });
 
   var $container = $('#timeline');
+
   $.ajax({
     url: '/timeline?last_updated_till=' + new Date().toISOString() + '&count=30',
     method: 'GET',
     dataType: 'json'
   }).done(function(data) {
+    var cards = []
     $.each(data.timeline, function(_, ele) {
-      $container.append(
-        '<div class="post-card" data-url="' + ele.url + '">' +
-          '<div class="resource-preview">' +
-            '<img src="' + ele.description + '">' +
-          '</div>' +
-          '<div class="user-info">' +
-            '<div class="user-avatar">' +
-              '<a href="' + '/users/' + ele.username + '">' +
-                '<img src="' + ele.avatar + '">' +
-              '</a>' +
-            '</div>' +
-            '<span class="user-name">' +
-              '<a href="' + '/users/' + ele.username + '">' +
-                ele.username + '</a></span>' +
-          '</div>' +
-        '</div>');
+      var $card = '<div class="post-card" data-url="' + ele.url + '">' +
+        '<div class="resource-preview">' +
+        '<img src="' + ele.description + '">' +
+        '</div>' +
+        '<div class="user-info">' +
+        '<div class="user-avatar">' +
+        '<a href="' + '/users/' + ele.username + '">' +
+        '<img src="' + ele.avatar + '">' +
+        '</a>' +
+        '</div>' +
+        '<span class="user-name">' +
+        '<a href="' + '/users/' + ele.username + '">' +
+        ele.username + '</a></span>' +
+        '</div>' +
+      '</div>';
+      cards.push($card);
     });
-    $container.imagesLoaded(function(){
+    $container.append(cards).imagesLoaded(function(){
       $container.masonry({
         // selector for entry content
         itemSelector: '.post-card',

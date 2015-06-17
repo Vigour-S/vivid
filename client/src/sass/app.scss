@@ -100,12 +100,13 @@ img {
 .post-card .user-info {
   background: #ffffff;
   transition: all .3s;
+  border: 1px solid #eee;
   padding: 15px;
   &:hover {
     background: #f1f1f1;
   }
 }
-.post-card .user-avatar {
+.post-card .user-info .user-avatar {
   display: inline-block;
   margin-right: 5px;
   width: 24px;
@@ -173,13 +174,14 @@ img {
     height: 100%;
   }
 }
-.user-info .user-avatar {
-  display: inline-block;
-  width: 80px;
-  height: 80px;
-  border: 1px solid #eee;
-}
+
 .user-detail {
+  .user-info .user-avatar {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    border: 1px solid #eee;
+  }
   .user-info .user-info-detail {
     display: inline-block;
   }
