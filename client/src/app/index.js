@@ -21,7 +21,7 @@ $(function () {
   var $container = $('#timeline');
 
   $.ajax({
-    url: '/timeline?last_updated_till=' + Date().now() + '&count=5',
+    url: '/timeline?last_updated_till=' + Date.now() + '&count=5',
     method: 'GET',
     dataType: 'json'
   }).done(function(data) {
