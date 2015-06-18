@@ -11,7 +11,7 @@
       <div class="container">
         <div class="user-info">
           <div class="user-avatar">
-            <img th:src="@{${user.avatar}}"></img>
+            <img th:src="@{${user.avatar}}"/>
           </div>
           <div class="user-info-detail">
             <span class="user-username" th:text="${user.username}"></span>
@@ -19,10 +19,10 @@
           </div>
         </div>
         <form th:if="${!isSelf and !isFollowed}" th:action="@{/follow?usernameToFollow=} + ${user.username}" method="post">
-          <input type="submit" value="Follow"/>
+          <input class="btn btn-success" type="submit" value="Follow"/>
         </form>
         <form th:if="${!isSelf and isFollowed}" th:action="@{/un_follow?usernameToUnFollow=} + ${user.username}" method="post">
-          <input type="submit" value="UnFollow"/>
+          <input class="btn btn-danger" type="submit" value="UnFollow"/>
         </form>
       </div>
     </div>

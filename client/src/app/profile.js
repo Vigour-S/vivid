@@ -29,7 +29,7 @@ $(function () {
       var datetime = new Date(ele.timestamp), $card = Vivid.cardTemplate(ele),
           lastUpdated = $container.data('last-updated');
       cards.push($card);
-      if (lastUpdated > datetime.toISOString())
+      if (lastUpdated === undefined || lastUpdated > datetime.toISOString())
         $container.data('last-updated', datetime.toISOString());
     });
     $container.append(cards).imagesLoaded(function(){
@@ -55,7 +55,7 @@ $(function () {
             var datetime = new Date(ele.timestamp), $card = Vivid.cardTemplate(ele),
                 lastUpdated = $container.data('last-updated');
             cards.push($card);
-            if (lastUpdated > datetime.toISOString())
+            if (lastUpdated === undefined || lastUpdated  > datetime.toISOString())
               $container.data('last-updated', datetime.toISOString());
           });
           $container.append(cards).imagesLoaded(function () {

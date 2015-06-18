@@ -23,7 +23,7 @@ window.Vivid = {
 
 $('#main-search').on('click', 'button', function() {
   $.ajax({
-    url: '/users/search?username=' + $('input', $('#main-search')),
+    url: '/users/search?username=' + $('input', $('#main-search')).val(),
     method: 'GET',
     dataType: 'json'
   }).done(function(json) {
