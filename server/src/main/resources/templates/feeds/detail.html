@@ -28,8 +28,7 @@
                 </div>
                 <div class="main-comment-content">
                   <a th:href="${comment.user.username}" th:text="${comment.user.username}"></a>
-                  <div class="content">
-                    <span th:text="${comment.comment.body}"></span>
+                  <div class="content" th:text="${comment.comment.body}">
                   </div>
                 </div>
               </div>

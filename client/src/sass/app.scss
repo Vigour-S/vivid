@@ -227,8 +227,10 @@ img {
 .comment .user-avatar {
   width: 42px;
   height: 42px;
-  display: inline-block;
+  float: left;
 }
 .comment .main-comment-content {
   display: inline-block;
+  float: left;
+  margin-left: 10px;
 }
