@@ -19,6 +19,11 @@ public class PinsKey implements Serializable {
     @PrimaryKeyColumn(name = "pin_id", ordinal = 1, type = PrimaryKeyType.CLUSTERED)
     private UUID pinId;
 
+    public PinsKey(UUID userId, UUID pinId) {
+        this.userId = userId;
+        this.pinId = pinId;
+    }
+
     public UUID getUserId() {
         return userId;
     }
@@ -33,11 +38,6 @@ public class PinsKey implements Serializable {
 
     public void setPinId(UUID PinId) {
         this.pinId = PinId;
-    }
-
-    public PinsKey(UUID userId, UUID pinId) {
-        this.userId = userId;
-        this.pinId = pinId;
     }
 
     @Override

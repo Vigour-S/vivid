@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cassandra.core.RowMapper;
 import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.stereotype.Service;
-import vivid.entity.User;
 import vivid.feed.*;
 import vivid.feed.compositekey.TimeLineKey;
 import vivid.repository.UserRepository;
@@ -29,6 +28,8 @@ import java.util.UUID;
 @Service
 public class FeedService {
 
+    static final long PERIOD = 30;
+
     @Autowired
     private CassandraOperations cassandraOperations;
 
@@ -40,8 +41,6 @@ public class FeedService {
 
     @Autowired
     private TimeLineRepository timeLineRepository;
-
-    static final long PERIOD = 30;
 
     public List<Followers> findFollowersByUserId(UUID userId) {
         Select select = QueryBuilder.select().from("followers");
@@ -88,7 +87,7 @@ public class FeedService {
         });
     }
 
-    public List<Pins> findPinsByPinId(UUID pinId){
+    public List<Pins> findPinsByPinId(UUID pinId) {
         Select select = QueryBuilder.select().from("pins");
         select.where(QueryBuilder.eq("pin_id", pinId));
         select.allowFiltering();
@@ -187,4 +186,5 @@ public class FeedService {
         }
         return findTimeLineByUserIdAndTimeAndCount(userId, lastUpdatedTill, count);
     }
+
 }

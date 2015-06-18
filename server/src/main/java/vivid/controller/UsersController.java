@@ -134,7 +134,8 @@ public class UsersController {
     }
 
     @RequestMapping(value = "users/search", method = RequestMethod.GET)
-    public @ResponseBody
+    public
+    @ResponseBody
     Map searchUser(@RequestParam String username) {
         List<User> users = userRepository.findByUsernameLike("%" + username + "%");
         Map<String, Object> map = new HashMap<String, Object>();

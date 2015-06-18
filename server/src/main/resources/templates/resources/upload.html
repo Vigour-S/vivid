@@ -6,43 +6,43 @@
 <div th:include="layouts/layout :: navbarFragment">
 </div>
 <div class="container">
-    <div class="page-header">
-        <div class="clearfix">
-            <div class="col-md-12 col-sm-6 col-xs-12">
-                <h1>Vision Explorer <small>Upload</small></h1>
-                <h1>Hello <shiro:principal/></h1>
-            </div>
-        </div>
-    </div>
-    <br/>
+  <div class="page-header">
     <div class="clearfix">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-offset-3 col-md-6">
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            <span class="title">Upload</span>
-                        </div>
-                        <div class="panel-body">
-                            <form class="form-horizontal" action="upload" method="post" enctype="multipart/form-data">
-                                <div class="form-group">
-                                    <label class="control-label col-md-3" for="file">File</label>
-                                    <div class="col-md-9">
-                                        <input id="file" class="form-control" type="file" name="file"/>
-                                    </div>
-                                </div>
-                                <div class="form-actions form-group">
-                                    <div class="col-md-offset-3 col-md-9">
-                                        <button class="btn btn-default" type="submit">Upload</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <div class="col-md-12 col-sm-6 col-xs-12">
+        <h1>Vision Explorer <small>Upload</small></h1>
+        <h1>Hello <shiro:principal/></h1>
+      </div>
     </div>
+  </div>
+  <br/>
+  <div class="clearfix">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              <span class="title">Upload</span>
+            </div>
+            <div class="panel-body">
+              <form class="form-horizontal" action="upload" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                  <label class="control-label col-md-3" for="file">File</label>
+                  <div class="col-md-9">
+                      <input id="file" class="form-control" type="file" name="file"/>
+                  </div>
+                </div>
+                <div class="form-actions form-group">
+                  <div class="col-md-offset-3 col-md-9">
+                    <button class="btn btn-default" type="submit">Upload</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <div th:include="layouts/layout :: footerFragment">
 </div>

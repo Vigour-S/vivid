@@ -6,12 +6,19 @@ import java.util.Date;
  * Created by wujy on 15-6-17.
  */
 public class PostBean {
+
     private String username;
+
     private String avatar;
+
     private String url;
+
     private String title;
+
     private String description;
+
     private Date timestamp;
+
     private Boolean isVideo;
 
     public String getUsername() {
@@ -69,4 +76,5 @@ public class PostBean {
     public void setIsVideo(Boolean isVideo) {
         this.isVideo = isVideo;
     }
+
 }

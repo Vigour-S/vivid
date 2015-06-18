@@ -8,4 +8,5 @@ import vivid.feed.compositekey.CommentKey;
  * Created by xiezhuohan on 15-6-12.
  */
 public interface CommentRepository extends TypedIdCassandraRepository<Comment, CommentKey> {
+
 }

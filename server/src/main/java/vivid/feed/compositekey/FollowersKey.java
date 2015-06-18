@@ -19,6 +19,11 @@ public class FollowersKey implements Serializable {
     @PrimaryKeyColumn(name = "follower_id", ordinal = 1, type = PrimaryKeyType.CLUSTERED)
     private UUID followerId;
 
+    public FollowersKey(UUID userId, UUID followerId) {
+        this.userId = userId;
+        this.followerId = followerId;
+    }
+
     public UUID getUserId() {
         return userId;
     }
@@ -32,11 +37,6 @@ public class FollowersKey implements Serializable {
     }
 
     public void setFollowerId(UUID followerId) {
-        this.followerId = followerId;
-    }
-
-    public FollowersKey(UUID userId, UUID followerId) {
-        this.userId = userId;
         this.followerId = followerId;
     }
 

@@ -7,7 +7,9 @@ import vivid.feed.Comment;
  * Created by wujy on 15-6-17.
  */
 public class CommentBean {
+
     private User user;
+
     private Comment comment;
 
     public User getUser() {
@@ -25,4 +27,5 @@ public class CommentBean {
     public void setComment(Comment comment) {
         this.comment = comment;
     }
+
 }

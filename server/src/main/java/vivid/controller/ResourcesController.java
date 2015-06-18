@@ -14,6 +14,7 @@ import vivid.entity.Resource;
 import vivid.repository.ResourceRepository;
 import vivid.service.FeedService;
 import vivid.service.ResourceService;
+import vivid.support.ResourceNotFoundException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -96,15 +97,16 @@ public class ResourcesController {
 
     @RequestMapping(value = "/view/{id}", method = RequestMethod.GET)
     public void picture(HttpServletResponse response, @PathVariable UUID id) {
-        Resource resource = resourceRepository.findOne(id);
-        File imageFile = new File(resourceService.getFilePath(resource.getId(), resource.getName()));
-        response.setContentType(resource.getContentType());
-        response.setContentLength(resource.getSize().intValue());
         try {
+            Resource resource = resourceRepository.findOne(id);
+            File imageFile = new File(resourceService.getFilePath(resource.getId(), resource.getName()));
+            response.setContentType(resource.getContentType());
+            response.setContentLength(resource.getSize().intValue());
             InputStream is = new FileInputStream(imageFile);
             IOUtils.copy(is, response.getOutputStream());
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("Could not show picture " + id, e);
+            throw new ResourceNotFoundException(e.getMessage(), e.getCause());
         }
     }
 
