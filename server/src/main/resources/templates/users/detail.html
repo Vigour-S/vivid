@@ -27,8 +27,80 @@
       </div>
     </div>
   </div>
-  <div id="timeline" class="user-timeline"></div>
+  <div class="container">
+    <div id="timeline" class="user-timeline"></div>
+    <div id="timeline-load-more"><button class="btn btn-default">Load more</button></div>
+  </div>
+
+  <div id="add-resource-modal" class="modal fade" role="dialog" aria-labelledby="add-resource-modal-label" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="add-resource-modal-label">Upload</h4>
+        </div>
+        <div class="modal-body">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-4">
+                <span class="btn btn-success fileinput-button">
+                  <i class="fa fa-plus"></i>
+                  <span>Upload from filesystem...</span>
+                  <!-- The file input field used as target for the file upload widget -->
+                  <input id="fileupload" type="file" name="file"></input>
+                </span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div id="progress" class="progress">
+                  <div class="bar progress-bar" style="width: 0%;"></div>
+                </div>
+              </div>
+            </div>
+            <hr/>
+            <div class="row">
+              <div class="col-md-12">
+                <form class="form-horizontal" action="#" th:action="@{/resources/upload_by_url}" th:object="${user}" method="post">
+                  <div class="form-group">
+                    <div class="col-md-9">
+                      <input id="fetch-by-url" class="form-control" type="text" name="fetch_by_url"/>
+                      <!--<input id="fetch-by-url" class="form-control" th:field="*{fetch_by_url}" type="text" name="fetch_by_url"/>-->
+                      <!--<span th:if="${#fields.hasErrors('fetch_by_url')}" th:errors="*{fetch_by_url}">URL Error</span>-->
+                    </div>
+                    <div class="col-md-3">
+                      <button class="btn btn-success" type="submit">Fetch</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div>
+
+  <div id="dock">
+    <a id="add-resource-button" class="dock-btn" data-toggle="modal" data-target="#add-resource-modal">
+      <i class="fa fa-plus-circle"></i>
+    </a>
+  </div>
 </div>
+
+<script th:src="@{/lib/jquery/dist/jquery.min.js}"></script>
+<script th:src="@{/lib/bootstrap-sass/assets/javascripts/bootstrap.min.js}"></script>
+<script th:src="@{/lib/jquery-ui/ui/minified/widget.min.js}"></script>
+<script th:src="@{/lib/jquery.iframe-transport/jquery.iframe-transport.js}"></script>
+<script th:src="@{/public/jquery.fileupload.js}"></script>
+<script th:src="@{/lib/jquery-infinite-scroll/jquery.infinitescroll.min.js}"></script>
+<script th:src="@{/lib/imagesloaded/imagesloaded.pkgd.min.js}"></script>
+<script th:src="@{/lib/masonry/dist/masonry.pkgd.min.js}"></script>
+<script th:src="@{/app/app.js}"></script>
+<script th:src="@{/app/profile.js}"></script>
 <div th:include="layouts/layout :: footerFragment">
 </div>
 </body>

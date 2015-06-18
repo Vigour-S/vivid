@@ -10,10 +10,7 @@ $(function () {
       dataType: 'json',
       progressall: function (e, data) {
         var progress = parseInt(data.loaded / data.total * 100, 10);
-        $('#progress .bar').css(
-          'width',
-          progress + '%'
-        );
+        $('#progress .bar').css('width', progress + '%');
       }
     });
   });
@@ -29,7 +26,7 @@ $(function () {
     $.each(data.timeline, function(_, ele) {
       var datetime = new Date(ele.timestamp), $card = Vivid.cardTemplate(ele);
       cards.push($card);
-      $('#timeline-next a').attr('href', '/timeline?count=10&last_updated_till=' + datetime.toISOString());
+      $container.data('last-updated', datetime.toISOString());
     });
     $container.append(cards).imagesLoaded(function(){
       $container.masonry({
@@ -38,27 +35,29 @@ $(function () {
         columnWidth: 250
       });
     });
-    $container.infinitescroll({
-      navSelector  : "#timeline-next",
-      // selector for the NEXT link (to page 2)
-      nextSelector : "#timeline-next a",
-      // selector for all items you'll retrieve
-      itemSelector : ".post-card",
-      loading: {
-        finishedMsg: 'No more to load.'
-      },
-      dataType: 'json',
-      appendCallback: false
-    }, function(json, opts) {
-      var cards = [];
-      $.each(json.timeline, function(_, ele) {
-        var datetime = new Date(ele.timestamp), $card = Vivid.cardTemplate(ele);
-        cards.push($card);
-        $('#timeline-next a').attr('href', '/timeline?count=10&last_updated_till=' + datetime.toISOString());
-      });
-      $container.append(cards).imagesLoaded(function() {
-        $container.masonry('reloadItems');
-        $container.masonry('layout');
+    $('#timeline-load-more').on('click', function() {
+      $('#timeline-load-more').hide();
+      $.ajax({
+        url: '/timeline?last_updated_till=' + $container.data('last-updated') + '&count=5',
+        method: 'GET',
+        dataType: 'json'
+      }).done(function(data) {
+        var cards = [];
+        if (data.timeline.length === 0) {
+          $('#timeline').append('<p>Nothing more.</p>');
+          $('#timeline-load-more').hide();
+        } else {
+          $.each(data.timeline, function (_, ele) {
+            var datetime = new Date(ele.timestamp), $card = Vivid.cardTemplate(ele);
+            cards.push($card);
+            $container.data('last-updated', datetime.toISOString());
+          });
+          $container.append(cards).imagesLoaded(function () {
+            $container.masonry('reloadItems');
+            $container.masonry('layout');
+          });
+          $('#timeline-load-more').show();
+        }
       });
     });
   });
