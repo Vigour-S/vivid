@@ -28,7 +28,7 @@ import java.util.UUID;
 @Service
 public class FeedService {
 
-    static final long PERIOD = 30;
+    private static final long PERIOD = 30;
 
     @Autowired
     private CassandraOperations cassandraOperations;

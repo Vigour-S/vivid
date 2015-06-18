@@ -34,7 +34,7 @@ import javax.validation.Valid;
 @Controller
 public class MainController {
 
-    private static final Logger log = LoggerFactory.getLogger(MainController.class);
+    private static final Logger logger = LoggerFactory.getLogger(MainController.class);
 
     @Autowired
     private DefaultPasswordService passwordService;
@@ -73,7 +73,7 @@ public class MainController {
     public String authenticate(@RequestParam String username, @RequestParam String password, @RequestParam(defaultValue = "true") Boolean rememberMe) {
         UsernamePasswordToken credentials = new UsernamePasswordToken(username, password);
         credentials.setRememberMe(rememberMe);
-        log.info("Authenticating {}", credentials.getUsername());
+        logger.info("Authenticating {}", credentials.getUsername());
         final Subject subject = SecurityUtils.getSubject();
         subject.login(credentials);
         return "redirect:/";
@@ -135,7 +135,7 @@ public class MainController {
 
     @Transactional
     @RequestMapping(value = "/avatar", method = RequestMethod.POST)
-    public String handleFormUpload(@RequestParam MultipartFile file, Model model) {
+    public String handleAvatarUpload(@RequestParam MultipartFile file, Model model) {
         try {
             if (file.isEmpty()) {
                 throw new FileUploadException("The file is empty.");

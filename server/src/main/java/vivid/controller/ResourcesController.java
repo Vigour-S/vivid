@@ -19,7 +19,6 @@ import vivid.support.ResourceNotFoundException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
@@ -30,7 +29,7 @@ import java.util.*;
 @RequestMapping("/resources")
 public class ResourcesController {
 
-    private static final Logger log = LoggerFactory.getLogger(ResourcesController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ResourcesController.class);
 
     @Autowired
     private ResourceRepository resourceRepository;
@@ -67,21 +66,60 @@ public class ResourcesController {
                 throw new FileUploadException("The file is empty.");
             }
 
-            String digest = resourceService.calcDigest(file.getBytes());
-
             // metadata persistence
+            String digest = resourceService.calcDigest(file.getBytes());
             Resource resource = resourceRepository.findByDigest(digest);
             if (resource == null) {
                 resource = new Resource(file.getSize(), digest, file.getOriginalFilename(), file.getOriginalFilename(), file.getContentType());
             }
             resource = resourceRepository.save(resource);
-            System.out.println("Resource ID: " + resource.getId());
+            logger.info("Resource ID: '{}'", resource.getId());
 
+            // save to filesystem
             resourceService.saveFile(file.getBytes(), resource.getId(), file.getOriginalFilename());
 
+            // save pins to timeline
             resource.setUrl("/resources/view/" + resource.getId());
+            feedService.saveResourcePin((String) SecurityUtils.getSubject().getPrincipal(), resource.getUrl());
+
+            List<Resource> list = new LinkedList<Resource>();
+            list.add(resource);
+            Map<String, Object> files = new HashMap<String, Object>();
+            files.put("files", list);
+            return files;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Transactional
+    @RequestMapping(value = "/upload_by_url", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    Map handleFormFetchRemote(@RequestParam String url) {
+        try {
+            if (url.isEmpty()) {
+                throw new FileUploadException("The url is invalid.");
+            }
+
+            // download remote file and mock it as a MultipartFile uploaded
+            MultipartFile file = resourceService.downloadFile(url);
+
+            // metadata persistence
+            String digest = resourceService.calcDigest(file.getBytes());
+            Resource resource = resourceRepository.findByDigest(digest);
+            if (resource == null) {
+                resource = new Resource(file.getSize(), digest, file.getOriginalFilename(), file.getOriginalFilename(), file.getContentType());
+            }
+            resource = resourceRepository.save(resource);
+            logger.info("Resource ID: '{}'", resource.getId());
+
+            // save to filesystem
+            resourceService.saveFile(file.getBytes(), resource.getId(), file.getOriginalFilename());
 
             // save pins to timeline
+            resource.setUrl("/resources/view/" + resource.getId());
             feedService.saveResourcePin((String) SecurityUtils.getSubject().getPrincipal(), resource.getUrl());
 
             List<Resource> list = new LinkedList<Resource>();
@@ -105,7 +143,7 @@ public class ResourcesController {
             InputStream is = new FileInputStream(imageFile);
             IOUtils.copy(is, response.getOutputStream());
         } catch (Exception e) {
-            log.error("Could not show picture " + id, e);
+            logger.error("Could not show picture " + id, e);
             throw new ResourceNotFoundException(e.getMessage(), e.getCause());
         }
     }

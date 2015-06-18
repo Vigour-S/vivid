@@ -29,7 +29,7 @@ import java.util.UUID;
 @Controller
 public class UsersController {
 
-    private static final Logger log = LoggerFactory.getLogger(UsersController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UsersController.class);
 
     @Autowired
     private DefaultPasswordService passwordService;
@@ -65,7 +65,7 @@ public class UsersController {
     @Transactional
     @RequestMapping(value = "users", method = RequestMethod.PUT)
     public void initScenario() {
-        log.info("Initializing scenario..");
+        logger.info("Initializing scenario..");
 
         // clean-up users, roles and permissions
         userRepository.deleteAll();
@@ -111,11 +111,11 @@ public class UsersController {
         userUser2.getRoles().add(roleUser);
         userRepository.save(userUser2);
 
-        log.info("Scenario initiated.");
+        logger.info("Scenario initiated.");
     }
 
     @RequestMapping(value = "users/{username}", method = RequestMethod.GET)
-    public String picture(@PathVariable String username, Model model) {
+    public String detail(@PathVariable String username, Model model) {
         User user = userRepository.findByUsername(username);
         model.addAttribute("user", user);
         UUID userId = userRepository.findByUsername((String) SecurityUtils.getSubject().getPrincipal()).getId();

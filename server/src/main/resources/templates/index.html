@@ -40,12 +40,11 @@
             <hr/>
             <div class="row">
               <div class="col-md-12">
-                <form class="form-horizontal" action="#" th:action="@{/resources/upload_by_url}" th:object="${user}" method="post">
+                <form class="form-horizontal" action="#" th:action="@{/resources/upload_by_url}" method="post">
                   <div class="form-group">
                     <div class="col-md-9">
-                      <input id="fetch-by-url" class="form-control" type="text" name="fetch_by_url"/>
-                      <!--<input id="fetch-by-url" class="form-control" th:field="*{fetch_by_url}" type="text" name="fetch_by_url"/>-->
-                      <!--<span th:if="${#fields.hasErrors('fetch_by_url')}" th:errors="*{fetch_by_url}">URL Error</span>-->
+                      <label for="fetch-by-url">Upload from remote website...</label>
+                      <input id="fetch-by-url" class="form-control" type="text" name="url"/>
                     </div>
                     <div class="col-md-3">
                       <button class="btn btn-success" type="submit">Fetch</button>
