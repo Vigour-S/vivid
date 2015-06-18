@@ -18,12 +18,21 @@
 
         <div class="panel panel-default">
           <div class="panel-body">
-            <div th:if="${#lists.isEmpty(comments)}" th:each="comment, iterationStatus : ${comments}">
+            <div th:if="${#lists.isEmpty(comments)}">
               <span>There is no comment at this time.</span>
             </div>
-            <div th:if="!${#lists.isEmpty(comments)}" th:each="comment, iterationStatus : ${comments}">
-              <span th:text="${comment.user.username}"></span>
-              <span th:text="${comment.comment.body}"></span>
+            <div th:if="!${#lists.isEmpty(comments)}">
+              <div class="comment" th:each="comment, iterationStatus : ${comments}">
+                <div class="user-avatar">
+                  <img th:src="${comment.user.avatar}"/>
+                </div>
+                <div class="main-comment-content">
+                  <a th:href="${comment.user.username}" th:text="${comment.user.username}"></a>
+                  <div class="content">
+                    <span th:text="${comment.comment.body}"></span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <form id="add-comment-form" class="form-horizontal" th:action="@{/comment}" method="post">

@@ -224,3 +224,11 @@ img {
 #timeline .user-info {
   border-top: 1px solid #eee;
 }
+.comment .user-avatar {
+  width: 42px;
+  height: 42px;
+  display: inline-block;
+}
+.comment .main-comment-content {
+  display: inline-block;
+}
