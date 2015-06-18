@@ -133,7 +133,7 @@ public class UsersController {
         return "users/detail";
     }
 
-    @RequestMapping(value = "users/search", method = RequestMethod.POST)
+    @RequestMapping(value = "users/search", method = RequestMethod.GET)
     public @ResponseBody
     Map searchUser(@RequestParam String username) {
         List<User> users = userRepository.findByUsernameLike("%" + username + "%");

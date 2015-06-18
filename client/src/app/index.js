@@ -24,9 +24,11 @@ $(function () {
   }).done(function(data) {
     var cards = [];
     $.each(data.timeline, function(_, ele) {
-      var datetime = new Date(ele.timestamp), $card = Vivid.cardTemplate(ele);
+      var datetime = new Date(ele.timestamp), $card = Vivid.cardTemplate(ele),
+          lastUpdated = $container.data('last-updated');
       cards.push($card);
-      $container.data('last-updated', datetime.toISOString());
+      if (lastUpdated > datetime.toISOString())
+        $container.data('last-updated', datetime.toISOString());
     });
     $container.append(cards).imagesLoaded(function(){
       $container.masonry({
@@ -48,11 +50,13 @@ $(function () {
           $('#timeline-load-more').hide();
         } else {
           $.each(data.timeline, function (_, ele) {
-            var datetime = new Date(ele.timestamp), $card = Vivid.cardTemplate(ele);
+            var datetime = new Date(ele.timestamp), $card = Vivid.cardTemplate(ele),
+              lastUpdated = $container.data('last-updated');
             cards.push($card);
-            $container.data('last-updated', datetime.toISOString());
+            if (lastUpdated > datetime.toISOString())
+              $container.data('last-updated', datetime.toISOString());
           });
-          $container.append(cards).imagesLoaded(function () {
+          $container.append(cards).imagesLoaded(function() {
             $container.masonry('reloadItems');
             $container.masonry('layout');
           });
