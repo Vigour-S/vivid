@@ -20,3 +20,14 @@ window.Vivid = {
       '</div>';
   }
 }
+
+$('#main-search').on('click', 'button', function() {
+  $.ajax({
+    url: '/users/search?username=' + $('input', $('#main-search')),
+    method: 'GET',
+    dataType: 'json'
+  }).done(function(json) {
+    console.log(json);
+  });
+  return false;
+});
