@@ -27,7 +27,7 @@
                   <img th:src="${comment.user.avatar}"/>
                 </div>
                 <div class="main-comment-content">
-                  <a th:href="${comment.user.username}" th:text="${comment.user.username}"></a>
+                  <a th:href="@{/users/} + ${comment.user.username}" th:text="${comment.user.username}"></a>
                   <div class="content" th:text="${comment.comment.body}">
                   </div>
                 </div>
