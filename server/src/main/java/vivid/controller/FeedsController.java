@@ -110,7 +110,7 @@ public class FeedsController {
     public
     @ResponseBody
     Map showTimeLineOthers(@RequestParam String username, @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ") @RequestParam("last_updated_till") Date lastUpdatedTill, @RequestParam int count) {
-        lastUpdatedTill.setYear(115);  // 2015
+        lastUpdatedTill.setYear(new Date().getYear());  // for frontend time bug
         List<TimeLine> timeLines = feedService.findTimeLineByUsernameAndTimeAndCount(username, lastUpdatedTill, count);
         List<PostBean> result = new LinkedList<PostBean>();
         for (TimeLine timeLine : timeLines) {
