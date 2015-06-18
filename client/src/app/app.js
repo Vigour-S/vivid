@@ -27,7 +27,8 @@ $('#main-search').on('click', 'button', function() {
     method: 'GET',
     dataType: 'json'
   }).done(function(json) {
-    console.log(json);
+    if (json.users.length === 0) return;
+    window.location.href = '/users' + json.users[0].username;
   });
   return false;
 });
