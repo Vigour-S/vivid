@@ -23,11 +23,15 @@
             </div>
             <div th:if="!${#lists.isEmpty(comments)}">
               <div class="comment" th:each="comment, iterationStatus : ${comments}">
-                <div class="user-avatar">
-                  <img th:src="${comment.user.avatar}"/>
+                <div class="user-info">
+                  <div class="user-avatar">
+                    <img th:src="${comment.user.avatar}"/>
+                  </div>
+                  <span class="user-name">
+                    <a th:href="@{/users/} + ${comment.user.username}" th:text="${comment.user.username}"></a>
+                  </span>
                 </div>
                 <div class="main-comment-content">
-                  <a th:href="@{/users/} + ${comment.user.username}" th:text="${comment.user.username}"></a>
                   <div class="content" th:text="${comment.comment.body}">
                   </div>
                 </div>
