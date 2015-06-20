@@ -111,6 +111,7 @@ public class MainController {
 
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public String profile(User user, Model model) {
+        SecurityUtils.getSubject().checkRole("USER");
         String username = (String) SecurityUtils.getSubject().getPrincipal();
         user = userRepository.findByUsername(username);
         model.addAttribute("user", user);
@@ -119,6 +120,7 @@ public class MainController {
 
     @RequestMapping(value = "/profile", method = RequestMethod.POST)
     public String updateProfile(@ModelAttribute("user") @Valid User user, BindingResult result, @RequestParam String confirm, RedirectAttributes redirectAttributes) {
+        SecurityUtils.getSubject().checkRole("USER");
         user = (User) result.getTarget();
         if (confirm == null || !user.getPassword().equals(confirm)) {
             result.addError(new FieldError("user", "password", "The two passwords are not match."));
@@ -136,6 +138,7 @@ public class MainController {
     @Transactional
     @RequestMapping(value = "/avatar", method = RequestMethod.POST)
     public String handleAvatarUpload(@RequestParam MultipartFile file, Model model) {
+        SecurityUtils.getSubject().checkRole("USER");
         try {
             if (file.isEmpty()) {
                 throw new FileUploadException("The file is empty.");

@@ -116,6 +116,7 @@ public class UsersController {
 
     @RequestMapping(value = "users/{username}", method = RequestMethod.GET)
     public String detail(@PathVariable String username, Model model) {
+        SecurityUtils.getSubject().checkRole("USER");
         User user = userRepository.findByUsername(username);
         model.addAttribute("user", user);
         UUID userId = userRepository.findByUsername((String) SecurityUtils.getSubject().getPrincipal()).getId();
@@ -137,6 +138,7 @@ public class UsersController {
     public
     @ResponseBody
     Map searchUser(@RequestParam String username) {
+        SecurityUtils.getSubject().checkRole("USER");
         List<User> users = userRepository.findByUsernameLike("%" + username + "%");
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("users", users);

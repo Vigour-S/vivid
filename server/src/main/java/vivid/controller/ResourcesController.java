@@ -46,21 +46,12 @@ public class ResourcesController {
         return "resources/upload";
     }
 
-    @RequestMapping(value = "/uploadSuccess", method = RequestMethod.GET)
-    public String uploadSuccess() {
-        return "resources/uploadSuccess";
-    }
-
-    @RequestMapping(value = "/uploadFailure", method = RequestMethod.GET)
-    public String uploadFailure() {
-        return "resources/uploadFailure";
-    }
-
     @Transactional
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public
     @ResponseBody
     Map handleFormUpload(@RequestParam MultipartFile file) {
+        SecurityUtils.getSubject().checkRole("USER");
         try {
             if (file.isEmpty()) {
                 throw new FileUploadException("The file is empty.");
@@ -98,6 +89,7 @@ public class ResourcesController {
     public
     @ResponseBody
     Map handleFormFetchRemote(@RequestParam String url) {
+        SecurityUtils.getSubject().checkRole("USER");
         try {
             if (url.isEmpty()) {
                 throw new FileUploadException("The url is invalid.");

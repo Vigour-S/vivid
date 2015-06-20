@@ -112,6 +112,19 @@ public class FeedService {
         });
     }
 
+    public List<TimeLine> findTimeLineByTimeAndCount(Date lastUpdatedTill, int count) {
+        Select select = QueryBuilder.select().from("timeline");
+        select.where(QueryBuilder.lt("time", lastUpdatedTill));
+        select.limit(count);
+        select.allowFiltering();
+        return cassandraOperations.query(select, new RowMapper<TimeLine>() {
+            @Override
+            public TimeLine mapRow(Row row, int rowNum) throws DriverException {
+                return new TimeLine(row.getUUID("user_id"), row.getDate("time"), row.getUUID("pin_id"));
+            }
+        });
+    }
+
     public List<TimeLine> findTimelineByUserId(UUID userId) {
         Select select = QueryBuilder.select().from("timeline");
         select.where(QueryBuilder.eq("user_id", userId));

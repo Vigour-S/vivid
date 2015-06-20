@@ -49,11 +49,13 @@ public class FeedsController {
 
     @RequestMapping(value = "/post", method = RequestMethod.POST)
     public void postPin(@RequestParam String username, @RequestParam String description) {
+        SecurityUtils.getSubject().checkRole("USER");
         feedService.saveResourcePin(username, description);
     }
 
     @RequestMapping(value = "/follow", method = RequestMethod.POST)
     public String follow(@RequestParam String usernameToFollow, HttpServletRequest request) {
+        SecurityUtils.getSubject().checkRole("USER");
         String username = (String) SecurityUtils.getSubject().getPrincipal();
         UUID userId = userRepository.findByUsername(username).getId();
         UUID userIdToFollow = userRepository.findByUsername(usernameToFollow).getId();
@@ -72,6 +74,7 @@ public class FeedsController {
 
     @RequestMapping(value = "/un_follow", method = RequestMethod.POST)
     public String unFollow(@RequestParam String usernameToUnFollow, HttpServletRequest request) {
+        SecurityUtils.getSubject().checkRole("USER");
         String username = (String) SecurityUtils.getSubject().getPrincipal();
         UUID userId = userRepository.findByUsername(username).getId();
         UUID userIdToFollow = userRepository.findByUsername(usernameToUnFollow).getId();
@@ -84,9 +87,14 @@ public class FeedsController {
     public
     @ResponseBody
     Map showTimeLine(@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ") @RequestParam("last_updated_till") Date lastUpdatedTill, @RequestParam int count) {
-        lastUpdatedTill.setYear(115);  // 2015
+        lastUpdatedTill.setYear(new Date().getYear());  // for frontend time bug
         String username = (String) SecurityUtils.getSubject().getPrincipal();
-        List<TimeLine> timeLines = feedService.findTimeLineByUsernameAndTimeAndCount(username, lastUpdatedTill, count);
+        List<TimeLine> timeLines;
+        if (username == null || username.isEmpty()) {
+            timeLines = feedService.findTimeLineByTimeAndCount(lastUpdatedTill, count);
+        } else {
+            timeLines = feedService.findTimeLineByUsernameAndTimeAndCount(username, lastUpdatedTill, count);
+        }
         List<PostBean> result = new LinkedList<PostBean>();
         for (TimeLine timeLine : timeLines) {
             Pins pins = feedService.findPinsByPinId(timeLine.getPinId()).get(0);
@@ -133,6 +141,7 @@ public class FeedsController {
 
     @RequestMapping(value = "/comment", method = RequestMethod.POST)
     public String createComment(@RequestParam UUID pinId, @RequestParam String body, HttpServletRequest request) {
+        SecurityUtils.getSubject().checkRole("USER");
         String username = (String) SecurityUtils.getSubject().getPrincipal();
         UUID userId = userRepository.findByUsername(username).getId();
         Date date = new Date();
@@ -144,6 +153,7 @@ public class FeedsController {
     public
     @ResponseBody
     Map showComment(@RequestParam UUID pinId) {
+        SecurityUtils.getSubject().checkRole("USER");
         List<Comment> comments = feedService.findCommentByPinId(pinId);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("comments", comments);
@@ -152,6 +162,7 @@ public class FeedsController {
 
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET)
     public String detail(@PathVariable UUID id, Model model) {
+        SecurityUtils.getSubject().checkRole("USER");
         Pins pins = feedService.findPinsByPinId(id).get(0);
         model.addAttribute("pins", pins);
 
