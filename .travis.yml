@@ -16,6 +16,12 @@ before_install:
   - psql -c 'CREATE DATABASE vivid;' -U postgres
   - psql -c 'grant all privileges on database vivid to vivid;' -U postgres
   - psql -c 'alter schema public owner to vivid;' -U postgres
+  - cqlsh -e "CREATE KEYSPACE vivid WITH replication = {'class':'SimpleStrategy', 'replication_factor':1};"
+  - cqlsh -e "CREATE TABLE followings (user_id uuid, following_id uuid, since timestamp, PRIMARY KEY (user_id, following_id));"
+  - cqlsh -e "CREATE TABLE followers (user_id uuid, follower_id uuid, since timestamp, PRIMARY KEY (user_id, follower_id));";
+  - cqlsh -e "CREATE TABLE pins (user_id uuid, pin_id uuid, time timestamp, body text, PRIMARY KEY (user_id, pin_id));";
+  - cqlsh -e "CREATE TABLE timeline (user_id uuid, time timestamp, pin_id uuid, PRIMARY KEY (user_id, time)) WITH CLUSTERING ORDER BY (time DESC);"
+  - cqlsh -e "CREATE TABLE comment (pin_id uuid, time timestamp, user_id uuid, body text, PRIMARY KEY (pin_id, time)) WITH CLUSTERING ORDER BY (time DESC);"
 
 notifications:
   slack:
