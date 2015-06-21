@@ -149,6 +149,9 @@ public class FeedService {
 
     public void saveResourcePin(String username, String body) {
         //save post
+        if (username == null || username.isEmpty()) {
+            return;
+        }
         UUID userId = userRepository.findByUsername(username).getId();
         UUID pinId = UUID.randomUUID();
         Date date = new Date();

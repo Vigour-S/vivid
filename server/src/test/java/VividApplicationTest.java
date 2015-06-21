@@ -14,13 +14,19 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.multipart.MultipartFile;
 import vivid.VividApplication;
 import vivid.config.*;
+import vivid.entity.Resource;
 import vivid.entity.User;
+import vivid.repository.ResourceRepository;
 import vivid.repository.UserRepository;
+import vivid.service.ResourceService;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import java.util.List;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -31,19 +37,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 public class VividApplicationTest {
 
-    protected Subject mockSubject;
     @Autowired
     private WebApplicationContext context;
-    private MockMvc mvc;
+
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private DefaultPasswordService passwordService;
+
+    @Autowired
+    private ResourceService resourceService;
+
+    @Autowired
+    private ResourceRepository resourceRepository;
+
+    private MockMvc mvc;
 
     @Before
     public void setUp() {
         // for Shiro
-        mockSubject = Mockito.mock(Subject.class);
+        Subject mockSubject = Mockito.mock(Subject.class);
         ThreadState threadState = new SubjectThreadState(mockSubject);
         threadState.bind();
 
@@ -65,17 +79,37 @@ public class VividApplicationTest {
         User user2 = userRepository.findByUsername("ErickGuan");
         Assert.assertEquals(user2.getEmail(), "fantasticfears@gmail.com");
 
-        User user3 = userRepository.findByUsernameLike("son").get(0);
+        User user3 = userRepository.findByUsernameLike("%Xie%").get(0);
         Assert.assertEquals(user3.getUsername(), "JasonXie");
 
-        User[] users = (User[]) userRepository.findAll().toArray();
-        Assert.assertEquals(users.length, 3);
-        Assert.assertArrayEquals(users, new User[]{user1, user2, user3});
+        List<User> users = userRepository.findAll();
+        assert (!users.get(0).equals(user1));
+        assert (!users.get(1).equals(user2));
+        assert (!users.get(2).equals(user3));
     }
 
     @Test
     public void testResourceUpload() throws Exception {
+        // login first
+        this.mvc.perform(post("/login").param("username", "wujysh@gmail.com").param("password", "123456"))
+                .andExpect(status().isFound());
 
+        String urlToDownload = "http://www.dhu.edu.cn/dhuzyimages/index_r1_c1.jpg";
+
+        this.mvc.perform(post("/resources/upload_by_url").param("url", urlToDownload))
+                .andExpect(status().isOk());
+        List<Resource> resources = resourceRepository.findAll();
+        Assert.assertNotEquals(resources.size(), 0);
+
+        Resource resource = resources.get(resources.size() - 1);
+        MultipartFile file = resourceService.downloadFile(urlToDownload);
+
+        this.mvc.perform(get("/resources/view/" + resource.getId()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(file.getContentType()))
+                .andExpect(content().bytes(file.getBytes()));
+
+        resourceRepository.delete(resource);
     }
 
 }
