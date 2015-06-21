@@ -6,6 +6,10 @@ jdk:
 before_install:
   - curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash -
   - sudo apt-get install -y nodejs
+  - psql -c 'create database vivid;' -U postgres
+  - psql vivid -c 'create user vivid;'
+  - psql vivid -c 'grant all privileges on database vivid to vivid;'
+  - psql vivid -c 'alter schema public owner to vivid;'
 
 notifications:
   slack:
