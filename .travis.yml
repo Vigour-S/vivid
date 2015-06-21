@@ -3,13 +3,19 @@ language: java
 jdk:
   - oraclejdk8
 
+addons:
+  postgresql: "9.4"
+
+services:
+  - cassandra
+
 before_install:
   - curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash -
   - sudo apt-get install -y nodejs
-  - psql -c 'create database vivid;' -U postgres
-  - psql vivid -c 'create user vivid;'
-  - psql vivid -c 'grant all privileges on database vivid to vivid;'
-  - psql vivid -c 'alter schema public owner to vivid;'
+  - psql -c "CREATE USER vivid WITH PASSWORD 'vivid';" -U postgres
+  - psql -c 'CREATE DATABASE vivid;' -U postgres
+  - psql -c 'grant all privileges on database vivid to vivid;' -U postgres
+  - psql -c 'alter schema public owner to vivid;' -U postgres
 
 notifications:
   slack:
