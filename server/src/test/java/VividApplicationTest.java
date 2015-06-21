@@ -89,11 +89,13 @@ public class VividApplicationTest {
     }
 
     @Test
-    public void testResourceUpload() throws Exception {
-        // login first
+    public void testLogin() throws Exception {
         this.mvc.perform(post("/login").param("username", "wujysh@gmail.com").param("password", "123456"))
                 .andExpect(status().isFound());
+    }
 
+    @Test
+    public void testResourceUpload() throws Exception {
         String urlToDownload = "http://www.dhu.edu.cn/dhuzyimages/index_r1_c1.jpg";
 
         this.mvc.perform(post("/resources/upload_by_url").param("url", urlToDownload))
