@@ -64,7 +64,7 @@ public class UsersController {
 
     @Transactional
     @RequestMapping(value = "users", method = RequestMethod.PUT)
-    public void initScenario() {
+    public String initScenario() {
         logger.info("Initializing scenario..");
 
         // clean-up users, roles and permissions
@@ -94,24 +94,26 @@ public class UsersController {
         // define user
         final User userAdmin = new User();
         userAdmin.setEmail("wujysh@gmail.com");
-        userAdmin.setUsername("Jiaye Wu");
+        userAdmin.setUsername("JiayeWu");
         userAdmin.setPassword(passwordService.encryptPassword("123456"));
         userAdmin.getRoles().add(roleAdmin);
+        userAdmin.getRoles().add(roleUser);
         userRepository.save(userAdmin);
         final User userUser1 = new User();
         userUser1.setEmail("fantasticfears@gmail.com");
-        userUser1.setUsername("Erick Guan");
+        userUser1.setUsername("ErickGuan");
         userUser1.setPassword(passwordService.encryptPassword("123456"));
         userUser1.getRoles().add(roleUser);
         userRepository.save(userUser1);
         final User userUser2 = new User();
         userUser2.setEmail("jasonxzh818@gmail.com");
-        userUser2.setUsername("Jason Xie");
+        userUser2.setUsername("JasonXie");
         userUser2.setPassword(passwordService.encryptPassword("123456"));
         userUser2.getRoles().add(roleUser);
         userRepository.save(userUser2);
 
         logger.info("Scenario initiated.");
+        return "index";
     }
 
     @RequestMapping(value = "users/{username}", method = RequestMethod.GET)
