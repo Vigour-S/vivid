@@ -13,11 +13,11 @@ import java.util.UUID;
 @Table(value = "pins")
 public class Pins {
 
-    @PrimaryKey(value = "pin_id")
-    private UUID pinId;
-
-    @Column(value = "user_id")
+    @PrimaryKey(value = "user_id")
     private UUID userId;
+
+    @Column(value = "pin_id")
+    private UUID pinId;
 
     @Column(value = "body")
     private String body;
@@ -25,7 +25,7 @@ public class Pins {
     @Column(value = "time")
     private Date time;
 
-    public Pins(UUID pinId, UUID userId, Date time, String body) {
+    public Pins(UUID userId, UUID pinId, Date time, String body) {
         this.pinId = pinId;
         this.userId = userId;
         this.time = time;

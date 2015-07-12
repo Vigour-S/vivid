@@ -65,16 +65,17 @@ public class PinsController {
         UUID userId = userRepository.findByUsername(username).getId();
         UUID pinId = UUID.randomUUID();
         Date date = new Date();
-        pinsRepository.save(new Pins(pinId, userId, date, description));
+        pinsRepository.save(new Pins(userId, pinId, date, description));
         //find followers
         List<Followers> followers = feedService.findFollowersByUserId(userId);
         //push
         for (Followers f : followers) {
-            UUID tempId = f.getPk().getUserId();
-            Duration duration = Duration.between(ZonedDateTime.of(LocalDateTime.now(), ZoneId.of("UTC+08:00")),
-                    userRepository.findById(tempId).getLastLoginDate()
+            UUID tempId = f.getPk().getFollowerId();
+            Duration duration = Duration.between(
+                    userRepository.findById(tempId).getLastLoginDate(),
+                    ZonedDateTime.of(LocalDateTime.now(), ZoneId.of("UTC+08:00"))
             );
-            if (duration.toDays() > -PERIOD) {
+            if (duration.toDays() < PERIOD) {
                 TimeLine timeLine = new TimeLine(new TimeLineKey(tempId, date), pinId);
                 timeLineRepository.save(timeLine);
             }
@@ -108,15 +109,16 @@ public class PinsController {
     @RequestMapping(value = "/timeLine", method = RequestMethod.POST)
     public String showTimeLine(@RequestParam String username) {
         UUID userId = userRepository.findByUsername(username).getId();
-        Duration duration = Duration.between(ZonedDateTime.of(LocalDateTime.now(), ZoneId.of("UTC+08:00")),
-                userRepository.findById(userId).getLastLoginDate()
+        Duration duration = Duration.between(
+                userRepository.findById(userId).getLastLoginDate(),
+                ZonedDateTime.of(LocalDateTime.now(), ZoneId.of("UTC+08:00"))
         );
         //pull
-        if (duration.toDays() <= -PERIOD) {
+        if (duration.toDays() >= PERIOD) {
             List<Followings> followings = feedService.findFollowingsByUserId(userId);
             for (Followings f : followings) {
-                UUID tempId = f.getPk().getUserId();
-                List<Pins> pins = pinsRepository.findByUserId(tempId);
+                UUID tempId = f.getPk().getFollowingId();
+                List<Pins> pins = feedService.findPinsByUserId(tempId);
                 for (Pins p : pins) {
                     Duration d = Duration.between(userRepository.findById(userId).getLastLoginDate(),
                             ZonedDateTime.of(LocalDateTime.ofInstant(p.getTime().toInstant(),
@@ -128,7 +130,7 @@ public class PinsController {
                 }
             }
         }
-        feedService.findTimelineByUserId(userId);
+        List<TimeLine> timeLines = feedService.findTimelineByUserId(userId);
         return null;
     }
 

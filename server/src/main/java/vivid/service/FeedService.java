@@ -7,8 +7,10 @@ import com.datastax.driver.core.querybuilder.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cassandra.core.RowMapper;
 import org.springframework.data.cassandra.core.CassandraOperations;
+import org.springframework.stereotype.Service;
 import vivid.feed.Followers;
 import vivid.feed.Followings;
+import vivid.feed.Pins;
 import vivid.feed.TimeLine;
 
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.UUID;
 /**
  * Created by wujy on 15-6-11.
  */
+@Service
 public class FeedService {
 
     @Autowired
@@ -40,6 +43,17 @@ public class FeedService {
             @Override
             public Followings mapRow(Row row, int rowNum) throws DriverException {
                 return new Followings(row.getUUID("user_id"), row.getUUID("following_id"), row.getDate("since"));
+            }
+        });
+    }
+
+    public List<Pins> findPinsByUserId(UUID userId) {
+        Select select = QueryBuilder.select().from("pins");
+        select.where(QueryBuilder.eq("user_id", userId));
+        return cassandraOperations.query(select, new RowMapper<Pins>() {
+            @Override
+            public Pins mapRow(Row row, int rowNum) throws DriverException {
+                return new Pins(row.getUUID("user_id"), row.getUUID("pin_id"), row.getDate("time"), row.getString("body"));
             }
         });
     }
